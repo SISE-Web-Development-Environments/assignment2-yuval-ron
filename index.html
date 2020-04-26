@@ -6,16 +6,48 @@
 	</head>
 
 	<body>
-		<div id="score">
+		<!-- <div id="score">
 			<label for="lblScore">SCORE:</label>
 			<input id="lblScore" type="text" />
-		</div>
-		<div id="time">
+		</div> -->
+		<header>
+			<button onclick="showGame()">Game</button>
+			<button onclick="showLogin()">Login</button>
+			<button onclick="showRegister()">Register</button>
+			<button onclick="showAbout()">About</button>
+		</header>
+		<div id="register">
+			<table>
+				<tr>
+					<th> <label for="username"><b>Username:</b></label> </th>
+					<th> <input type="text" placeholder="username" name="username" required> </th>
+				</tr>
+				<tr>
+					<th> <label for="password"><b>Password:</b></label> </th>
+					<th> <input type="password" placeholder="password" name="password" required> </th>
+				</tr>
+				<tr>
+					<th> <label for="name"><b>Full Name:</b></label> </th>
+					<th> <input type="text" placeholder="name" name="name" required> </th>
+				</tr>
+				<tr>
+					<th> <label for="birthday">Birthday:</label> </th>
+					<th> <input type="date" id="birthday" name="birthday"> </th>
+				</tr>
+				<tr>
+					<th><button onclick="myFunction()">Click me</button></th>
+				</tr>
+			</table>
+			
+			<!-- <label for="psw"><b>Password</b></label>
+			<input type="password" placeholder="Enter Password" name="psw" required>
+		</div> -->
+		<!-- <div id="time">
 			<label for="lblTime">TIME:</label>
 			<input id="lblTime" type="text" />
 		</div>
 		<div id="game">
 			<canvas id="canvas" height="600" width="600"></canvas>
-		</div>
+		</div> -->
 	</body>
 </html>
