@@ -7,9 +7,24 @@ var start_time;
 var time_elapsed;
 var interval;
 
-$(document).ready(function() {
+$(document).ready(function () {
 	context = canvas.getContext("2d");
-	Start();
+	keysDown = {};
+	addEventListener(
+		"keydown",
+		function (e) {
+			keysDown[e.keyCode] = true;
+		},
+		false
+	);
+	addEventListener(
+		"keyup",
+		function (e) {
+			keysDown[e.keyCode] = false;
+		},
+		false
+	);
+	interval = setInterval(UpdatePosition, 150);
 });
 
 function Start() {
@@ -20,20 +35,52 @@ function Start() {
 	var food_remain = 50;
 	var pacman_remain = 1;
 	start_time = new Date();
-	for (var i = 0; i < 10; i++) {
+	for (let i = 0; i < 16; i++) {//every column
 		board[i] = new Array();
 		//put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
-		for (var j = 0; j < 10; j++) {
+		for (let j = 0; j < 11; j++) {//every row
 			if (
-				(i == 3 && j == 3) ||
+				(i == 1 && j == 1) ||
+				(i == 1 && j == 2) ||
+				(i == 1 && j == 8) ||
+				(i == 1 && j == 9) ||
+				(i == 2 && j == 1) ||
+				(i == 2 && j == 2) ||
+				(i == 2 && j == 8) ||
+				(i == 2 && j == 9) ||
+				(i == 5 && j == 1) ||
+				(i == 5 && j == 2) ||
+				(i == 5 && j == 3) ||
+				(i == 5 && j == 7) ||
+				(i == 5 && j == 8) ||
+				(i == 5 && j == 9) ||
+				(i == 7 && j == 2) ||
+				(i == 7 && j == 8) ||
+				(i == 8 && j == 2) ||
+				(i == 8 && j == 8) ||
+				(i == 10 && j == 1) ||
+				(i == 10 && j == 2) ||
+				(i == 10 && j == 3) ||
+				(i == 10 && j == 7) ||
+				(i == 10 && j == 8) ||
+				(i == 10 && j == 9) ||
+				(i == 13 && j == 1) ||
+				(i == 13 && j == 2) ||
+				(i == 13 && j == 8) ||
+				(i == 13 && j == 9) ||
+				(i == 14 && j == 1) ||
+				(i == 14 && j == 2) ||
+				(i == 14 && j == 8) ||
+				(i == 14 && j == 9)
+				/*(i == 3 && j == 3) ||
 				(i == 3 && j == 4) ||
 				(i == 3 && j == 5) ||
 				(i == 6 && j == 1) ||
-				(i == 6 && j == 2)
+				(i == 6 && j == 2)*/
 			) {
 				board[i][j] = 4;
 			} else {
-				var randomNum = Math.random();
+				let randomNum = Math.random();
 				if (randomNum <= (1.0 * food_remain) / cnt) {
 					food_remain--;
 					board[i][j] = 1;
@@ -54,22 +101,6 @@ function Start() {
 		board[emptyCell[0]][emptyCell[1]] = 1;
 		food_remain--;
 	}
-	keysDown = {};
-	addEventListener(
-		"keydown",
-		function(e) {
-			keysDown[e.keyCode] = true;
-		},
-		false
-	);
-	addEventListener(
-		"keyup",
-		function(e) {
-			keysDown[e.keyCode] = false;
-		},
-		false
-	);
-	interval = setInterval(UpdatePosition, 250);
 }
 
 function findRandomEmptyCell(board) {
@@ -101,29 +132,44 @@ function Draw() {
 	canvas.width = canvas.width; //clean board
 	lblScore.value = score;
 	lblTime.value = time_elapsed;
-	for (var i = 0; i < 10; i++) {
-		for (var j = 0; j < 10; j++) {
+	context.beginPath();
+	context.moveTo(3 * 40,canvas.height / 2 - 20);
+	context.lineTo(0, canvas.height / 2 - 20);
+	context.lineTo(0, 0);
+	context.lineTo(canvas.width, 0);
+	context.lineTo(canvas.width, canvas.height / 2 - 20);
+	context.lineTo(canvas.width - 3 * 40,canvas.height / 2 - 20);
+	context.stroke();
+	context.moveTo(3 * 40,canvas.height / 2 + 20);
+	context.lineTo(0, canvas.height / 2 + 20);
+	context.lineTo(0, canvas.height);
+	context.lineTo(canvas.width, canvas.height);
+	context.lineTo(canvas.width, canvas.height / 2 + 20);
+	context.lineTo(canvas.width - 3 * 40,canvas.height / 2 + 20);
+	context.stroke();
+	for (var i = 0; i < 16; i++) {
+		for (var j = 0; j < 11; j++) {
 			var center = new Object();
-			center.x = i * 60 + 30;
-			center.y = j * 60 + 30;
+			center.x = i * 40 + 20;
+			center.y = j * 40 + 20;
 			if (board[i][j] == 2) {
 				context.beginPath();
-				context.arc(center.x, center.y, 30, 0.15 * Math.PI, 1.85 * Math.PI); // half circle
+				context.arc(center.x, center.y, 15, 0.15 * Math.PI, 1.85 * Math.PI); // half circle
 				context.lineTo(center.x, center.y);
 				context.fillStyle = pac_color; //color
 				context.fill();
 				context.beginPath();
-				context.arc(center.x + 5, center.y - 15, 5, 0, 2 * Math.PI); // circle
+				context.arc(center.x + 4, center.y - 7, 2, 0, 2 * Math.PI); // circle
 				context.fillStyle = "black"; //color
 				context.fill();
 			} else if (board[i][j] == 1) {
 				context.beginPath();
-				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
+				context.arc(center.x, center.y, 8, 0, 2 * Math.PI); // circle
 				context.fillStyle = "black"; //color
 				context.fill();
 			} else if (board[i][j] == 4) {
 				context.beginPath();
-				context.rect(center.x - 30, center.y - 30, 60, 60);
+				context.rect(center.x - 20, center.y - 20, 40, 40);
 				context.fillStyle = "grey"; //color
 				context.fill();
 			}
@@ -134,23 +180,23 @@ function Draw() {
 function UpdatePosition() {
 	board[shape.i][shape.j] = 0;
 	var x = GetKeyPressed();
-	if (x == 1) {
-		if (shape.j > 0 && board[shape.i][shape.j - 1] != 4) {
+	if (x == 1) {//up
+		if (shape.j > 0 && board[shape.i][shape.j - 1] != 4 && !((shape.j == 5 || shape.j == 6) && (shape.i < 3 || shape.i > 13))) {
 			shape.j--;
 		}
 	}
-	if (x == 2) {
-		if (shape.j < 9 && board[shape.i][shape.j + 1] != 4) {
+	if (x == 2) {//down
+		if (shape.j < 10 && board[shape.i][shape.j + 1] != 4 && !((shape.j == 5 || shape.j == 4) && (shape.i < 3 || shape.i > 13))) {
 			shape.j++;
 		}
 	}
-	if (x == 3) {
+	if (x == 3) {//left
 		if (shape.i > 0 && board[shape.i - 1][shape.j] != 4) {
 			shape.i--;
 		}
 	}
-	if (x == 4) {
-		if (shape.i < 9 && board[shape.i + 1][shape.j] != 4) {
+	if (x == 4) {//right
+		if (shape.i < 15 && board[shape.i + 1][shape.j] != 4) {
 			shape.i++;
 		}
 	}
