@@ -84,6 +84,9 @@
 	</div>
 
 	<div id="gamePage" style="text-align: center;" class="hidden ">
+		<div>
+			<label id="welcomeUser">Pacman Name: </label>
+		</div>
 		<div id="score">
 			<label for="lblScore">SCORE:</label>
 			<input id="lblScore" type="text" />
@@ -92,8 +95,15 @@
 			<label for="lblTime">TIME:</label>
 			<input id="lblTime" type="text" />
 		</div>
+		<div id="lives">
+			<label for="lblTime">Lives:</label>
+			<input id="lblTime" type="text" />
+		</div>
 		<div id="game">
 			<canvas id="canvas" width="640" height="440"></canvas>
+		</div>
+		<div>
+			<button onclick="restartGame()">Start New Game</button>
 		</div>
 	</div>
 
@@ -123,6 +133,7 @@
 	<script>//scripts to login/register and navigate
 		window.alert("Good");
 		let loggedIn = true;
+		let currentUser = "Not Logged In";
 		const users = [];
 		let firstUser = {
 			username: "p",
@@ -143,6 +154,7 @@
 				if (users[i].username == givenUsername && users[i].password == givenPassword) {
 					window.alert("You have successfully log in to the website !");
 					loggedIn = true;
+					currentUser = users[i].name;
 					document.getElementById("showLogoutButton").style.display = "block";
 					document.getElementById("showLoginButton").style.display = "none";
 					document.getElementById("showRegisterButton").style.display = "none";
@@ -157,11 +169,6 @@
 
 		function registerUser() {//register user
 			//check that everything is ok:
-			//check if all fields been submited
-			/*if ($("#register input:empty").length != 0) {
-				window.alert("You need to fill everything first\n" + "number of empty fields is: " + $("#register input:empty").length);
-				return;
-			}*/
 			if ($('#registerUsername').val().length == 0 || $('#registerPassword').val().length == 0 || $('#registerName').val().length == 0 || $('#registerEmail').val().length == 0 || $('#registerBirthday').val() == 0) {
 				window.alert("You need to fill all fields in order to continue");
 				return;
@@ -183,11 +190,6 @@
 				window.alert("Email is not valid");
 				return;
 			}
-
-			window.alert("good");
-			//check if pasword has letters and numbers and is larger then 5
-			//check if name doesn't have numbers
-			//check if email is legal.
 			let newUser = {
 				username: document.getElementById("registerUsername").value,
 				password: document.getElementById("registerPassword").value,
@@ -255,11 +257,14 @@
 
 		function showGame() {
 			if (loggedIn) {
-				document.getElementById("gamePage").style.display = "block";
-				document.getElementById("register").style.display = "none";
-				document.getElementById("login").style.display = "none";
-				document.getElementById("welcome").style.display = "none";
-				Start();
+				if (document.getElementById("gamePage").style.display != "block") {//we show the game only if the game is not already shown
+					document.getElementById("welcomeUser").innerHTML = "Pacman Name: " + currentUser;
+					document.getElementById("gamePage").style.display = "block";
+					document.getElementById("register").style.display = "none";
+					document.getElementById("login").style.display = "none";
+					document.getElementById("welcome").style.display = "none";
+					Start();
+				}
 			}
 			else {
 				window.alert("You can't enter the game if you're not logged in");
