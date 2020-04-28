@@ -5,14 +5,14 @@ var score;
 var pac_color;
 var start_time;
 var time_elapsed;
-var remainingTime
+var remainingTime;
 var interval;
 var ghostsInterval;
 var timeInterval;
 var lastMoved = "right";
 var ghosts = [];
 var lives = 5;
-var amountOfTotalFood = 50;
+var amountOfTotalFood;
 var foodEaten;
 var moveRight = 39;
 var moveLeft = 37;
@@ -46,6 +46,7 @@ $(document).ready(function () {
 });
 
 function moveToGame() {//function that is being called after finishing to edit the settings
+	// TODO check that every field is ok
 	firstFoodColor = document.getElementById("firstFoodColor").value;
 	firstFoodPoints = parseInt(document.getElementById("firstFoodPoints").value);
 	secondFoodColor = document.getElementById("secondFoodColor").value;
@@ -53,6 +54,38 @@ function moveToGame() {//function that is being called after finishing to edit t
 	thirdFoodColor = document.getElementById("thirdFoodColor").value;
 	thirdFoodPoints = parseInt(document.getElementById("thirdFoodPoints").value);
 	amountOfTotalFood = document.getElementById("amountOfFood").value;
+	remainingTime = document.getElementById("amountOfTime").value;
+	let amountOfGhosts = document.getElementById("amountOfGhosts").value;
+	ghosts = [];
+	if (amountOfGhosts > 0) {
+		addGhost("red", 0, 10);
+	}
+	if (amountOfGhosts > 1) {
+		addGhost("aqua", 15, 10);
+	}
+	if (amountOfGhosts > 2) {
+		addGhost("pink", 0, 0);
+	}
+	if (amountOfGhosts > 3) {
+		addGhost("orange", 15, 0);
+	}
+	document.getElementById("gameboard").style.display = "none";
+	document.getElementById("RightMoveButton").style.display = "none";
+	document.getElementById("LeftMoveButton").style.display = "none";
+	document.getElementById("UpMoveButton").style.display = "none";
+	document.getElementById("DownMoveButton").style.display = "none";
+	document.getElementById("RightMoveButton").style.display = "none";
+	document.getElementById("firstFoodColor").disabled = true;
+	document.getElementById("firstFoodPoints").readOnly = true;
+	document.getElementById("secondFoodColor").disabled = true;
+	document.getElementById("secondFoodPoints").readOnly = true;
+	document.getElementById("thirdFoodColor").disabled = true;
+	document.getElementById("thirdFoodPoints").readOnly = true;
+	document.getElementById("amountOfFood").readOnly = true;
+	document.getElementById("amountOfTime").readOnly = true;
+	document.getElementById("amountOfGhosts").readOnly = true;
+	document.getElementById("randomSettingsButton").style.display = "none";
+	document.getElementById("moveToGameButton").style.display = "none";
 	document.getElementById("gameboard").style.display = "block";
 	Start();
 }
@@ -108,7 +141,7 @@ function addGhost(ghostColor, startX, startY) {
 		y: startY,
 		color: ghostColor,
 		initialX: startX,
-		initialY: startY
+		initialY: startY,
 	};
 	ghosts.push(ghost);
 }
@@ -126,32 +159,73 @@ function countTimer() {
 			window.alert("Winner!!!");
 		}
 	}
+	/*if(remainingTime < 40) {
+		window.alert("Number of food eaten: " + foodEaten + " and number of total is: " + amountOfTotalFood)
+	}*/
 	Draw();
 	if (foodEaten == amountOfTotalFood) {//the player ate all the food and finished the game
 		window.clearInterval(interval);
-		window.clearInterval(ghostsInterval);
-		window.clearInterval(timeInterval);
+	window.clearInterval(ghostsInterval);
+	window.clearInterval(timeInterval);
 		window.alert("Game completed");
 	}
+}
+
+function setSettingsRandom() {
+
+	document.getElementById("RightMoveButton").value = "ArrowRight";
+	document.getElementById("LeftMoveButton").value = "ArrowLeft";
+	document.getElementById("UpMoveButton").value = "ArrowUp";
+	document.getElementById("DownMoveButton").value = "ArrowDown";
+	moveRight = 39;
+	moveLeft = 37;
+	moveUp = 38;
+	moveDown = 40;
+	document.getElementById("firstFoodColor").value = getRandomColor();
+	document.getElementById("firstFoodPoints").value = Math.floor(Math.random() * 100) + 1;
+	document.getElementById("secondFoodColor").value = getRandomColor();
+	document.getElementById("secondFoodPoints").value = Math.floor(Math.random() * 100) + 1;
+	document.getElementById("thirdFoodColor").value = getRandomColor();
+	document.getElementById("thirdFoodPoints").value = Math.floor(Math.random() * 100) + 1;
+	document.getElementById("amountOfFood").value = Math.floor(Math.random() * 90) + 40;
+	document.getElementById("amountOfGhosts").value = Math.floor(Math.random() * 4) + 1;
+}
+
+function getRandomColor() {
+	let letters = '0123456789ABCDEF';
+	let color = '#';
+	for (let i = 0; i < 6; i++) {
+		color += letters[Math.floor(Math.random() * 16)];
+	}
+	return color;
 }
 
 function restartGame() {
 	window.clearInterval(interval);
 	window.clearInterval(ghostsInterval);
 	window.clearInterval(timeInterval);
-	
-	document.getElementById("chooseSettings").style.display = "block";
-	document.getElementById("gameboard").style.display = "none";
 
-	/*ghostsInterval = setInterval(moveGhostRandomly, 200);
-	interval = setInterval(UpdatePosition, 100);
-	timeInterval = setInterval(countTimer, 100);*/
-	
-	//Start();
+	document.getElementById("RightMoveButton").style.display = "block";
+	document.getElementById("LeftMoveButton").style.display = "block";
+	document.getElementById("UpMoveButton").style.display = "block";
+	document.getElementById("DownMoveButton").style.display = "block";
+	document.getElementById("RightMoveButton").style.display = "block";
+	document.getElementById("firstFoodColor").disabled = false;
+	document.getElementById("firstFoodPoints").readOnly = false;
+	document.getElementById("secondFoodColor").disabled = false;
+	document.getElementById("secondFoodPoints").readOnly = false;
+	document.getElementById("thirdFoodColor").disabled = false;
+	document.getElementById("thirdFoodPoints").readOnly = false;
+	document.getElementById("amountOfFood").readOnly = false;
+	document.getElementById("amountOfTime").readOnly = false;
+	document.getElementById("amountOfGhosts").readOnly = false;
+	document.getElementById("randomSettingsButton").style.display = "block";
+	document.getElementById("moveToGameButton").style.display = "block";
+	document.getElementById("gameboard").style.display = "none";
 }
 
 function Start() {
-	ghostsInterval = setInterval(moveGhostRandomly, 200);
+	ghostsInterval = setInterval(moveGhostSmartly, 1000);
 	interval = setInterval(UpdatePosition, 100);
 	timeInterval = setInterval(countTimer, 100);
 	keysDown = [];
@@ -159,12 +233,6 @@ function Start() {
 	let totalFoodRemain = amountOfTotalFood;
 	lives = 5;
 	document.getElementById("lives").innerHTML = "Lives: " + lives
-	remainingTime = 50.0;
-	ghosts = [];
-	addGhost("red", 0, 10);
-	addGhost("aqua", 15, 10);
-	addGhost("pink", 0, 0);
-	addGhost("orange", 15, 0);
 	board = new Array();
 	score = 0;
 	pac_color = "yellow";
@@ -229,11 +297,6 @@ function Start() {
 						thirdFoodRemain--;
 						totalFoodRemain--;
 					}
-				} else if (randomNum < (1.0 * (pacman_remain + totalFoodRemain)) / cnt) {
-					shape.x = i;
-					shape.y = j;
-					pacman_remain--;
-					board[i][j] = 2;
 				} else {
 					board[i][j] = 0;
 				}
@@ -241,6 +304,10 @@ function Start() {
 			}
 		}
 	}
+	let randomPlace = findRandomEmptyMiddleCell(board);
+	shape.x = randomPlace[0];
+	shape.y = randomPlace[1];
+	board[shape.x][shape.y] = 2;
 	while (totalFoodRemain > 0) {
 		let emptyCell;
 		for (let i = 0; i < thirdFoodRemain; i++) {
@@ -259,7 +326,7 @@ function Start() {
 			totalFoodRemain--;
 		}
 	}
-
+	window.alert("This suppse to be 0: " + totalFoodRemain);
 }
 
 function findRandomEmptyCell(board) {
@@ -302,6 +369,9 @@ function loseLiveAndRestart() {
 		ghosts[1].x = 15;
 		ghosts[1].y = 10;
 
+		ghosts[1].x = 15;
+		ghosts[1].y = 10;
+
 		ghosts[2].x = 0;
 		ghosts[2].y = 0;
 
@@ -309,17 +379,26 @@ function loseLiveAndRestart() {
 		ghosts[3].y = 0;
 
 		board[shape.x][shape.y] = 0;
-		random = findRandomEmptyCell(board);
+		random = findRandomEmptyMiddleCell(board);
 		shape.x = random[0];
 		shape.y = random[1];
-
-	}
-	else { // the user used all his lives
+	} else {
+		// the user used all his lives
 		window.clearInterval(interval);
 		window.clearInterval(ghostsInterval);
 		window.clearInterval(timeInterval);
 		window.alert("Loser!");
 	}
+}
+
+function findRandomEmptyMiddleCell(board) {
+	let i = Math.floor(Math.random() * 14 + 1);
+	let j = Math.floor(Math.random() * 7 + 3);
+	while (board[i][j] != 0) {
+		i = Math.floor(Math.random() * 14 + 1);
+		j = Math.floor(Math.random() * 7 + 3);
+	}
+	return [i, j];
 }
 
 function Draw() {
@@ -453,45 +532,59 @@ function moveGhostRandomly() {
 function UpdatePosition() {
 	board[shape.x][shape.y] = 0;
 	var x = GetKeyPressed();
-	if (x == 1) {//up
-		if (shape.y > 0 && board[shape.x][shape.y - 1] != 4 && !((shape.y == 5 || shape.y == 6) && (shape.x < 3 || shape.x > 12))) {
+	if (x == 1) {
+		//up
+		if (
+			shape.y > 0 &&
+			board[shape.x][shape.y - 1] != 4 &&
+			!((shape.y == 5 || shape.y == 6) && (shape.x < 3 || shape.x > 12))
+		) {
 			shape.y--;
 		}
 	}
-	if (x == 2) {//down
-		if (shape.y < 10 && board[shape.x][shape.y + 1] != 4 && !((shape.y == 5 || shape.y == 4) && (shape.x < 3 || shape.x > 12))) {
+	if (x == 2) {
+		//down
+		if (
+			shape.y < 10 &&
+			board[shape.x][shape.y + 1] != 4 &&
+			!((shape.y == 5 || shape.y == 4) && (shape.x < 3 || shape.x > 12))
+		) {
 			shape.y++;
 		}
 	}
-	if (x == 3) {//left
+	if (x == 3) {
+		//left
 		if (shape.x > 0 && board[shape.x - 1][shape.y] != 4) {
 			shape.x--;
-		}
-		else if (shape.y == 5 && shape.x == 0) {//need to teleport him to the other side
+		} else if (shape.y == 5 && shape.x == 0) {
+			//need to teleport him to the other side
 			shape.x = 15;
 		}
 	}
-	if (x == 4) {//right
+	if (x == 4) {
+		//right
 		if (shape.x < 15 && board[shape.x + 1][shape.y] != 4) {
 			shape.x++;
-		}
-		else if (shape.y == 5 && shape.x == 15) {//need to teleport him to the other side
+		} else if (shape.y == 5 && shape.x == 15) {
+			//need to teleport him to the other side
 			shape.x = 0;
 		}
 	}
-	if (board[shape.x][shape.y] == 1) {//if it's a normal score we raise the score
+	if (board[shape.x][shape.y] == 1) {
+		//if it's a normal score we raise the score
 		score += firstFoodPoints;
 		foodEaten++;
 	}
-	if (board[shape.x][shape.y] == 10) {//if it's a middle score we raise the score
+	else if (board[shape.x][shape.y] == 10) {
 		score += secondFoodPoints;
 		foodEaten++;
 	}
-	if (board[shape.x][shape.y] == 11) {//if it's a high score we raise the score
+	else if (board[shape.x][shape.y] == 11) {
 		score += thirdFoodPoints;
 		foodEaten++;
 	}
 	board[shape.x][shape.y] = 2;
+	//Draw();
 	for (let i = 0; i < ghosts.length; i++) {
 		if (shape.x == ghosts[i].x && shape.y == ghosts[i].y) {
 			loseLiveAndRestart();
@@ -563,5 +656,88 @@ function moveGhost(creature, way) {
 	}
 	if (shape.x == creature.x && shape.y == creature.y) {
 		loseLiveAndRestart();
+	}
+}
+
+//smart ghost movment
+function moveGhostSmartly() {
+	for (let i = 0; i < ghosts.length; i++) {
+		let CordianteX = ghosts[i].x;
+		let CordianteY = ghosts[i].y;
+		let PacmanX = shape.x;
+		let PacmanY = shape.y;
+		let boolean = false;
+		let disX = Math.abs(PacmanX - CordianteX);
+		let disY = Math.abs(PacmanY - CordianteY);
+		let randNum = Math.floor(Math.random() * 4) + 1
+		if (randNum == 1) {
+			// Down = 2
+			if (PacmanY > CordianteY && board[ghosts[i].x][ghosts[i].y + 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 4) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
+				moveGhost(ghosts[i], 2);
+			}
+			// Up = 1
+			else if (PacmanY < CordianteY && board[ghosts[i].x][ghosts[i].y - 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 6) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
+				moveGhost(ghosts[i], 1);
+			}
+			// Right = 4
+			else if (Math.abs(PacmanX - (CordianteX + 1)) < disX && board[ghosts[i].x + 1][ghosts[i].y] != 4) {
+				moveGhost(ghosts[i], 4);
+			}
+			// Left = 3
+			else if (Math.abs(PacmanX - (CordianteX - 1)) < disX && board[ghosts[i].x - 1][ghosts[i].y] != 4) {
+				moveGhost(ghosts[i], 3);
+			}
+		} else if (randNum == 2) {
+			// Up = 1
+			if (PacmanY < CordianteY && board[ghosts[i].x][ghosts[i].y - 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 6) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
+				moveGhost(ghosts[i], 1);
+			}
+			// Right = 4
+			else if (Math.abs(PacmanX - (CordianteX + 1)) < disX && board[ghosts[i].x + 1][ghosts[i].y] != 4) {
+				moveGhost(ghosts[i], 4);
+			}
+			// Left = 3
+			else if (Math.abs(PacmanX - (CordianteX - 1)) < disX && board[ghosts[i].x - 1][ghosts[i].y] != 4) {
+				moveGhost(ghosts[i], 3);
+			}
+			// Down = 2
+			else if (PacmanY > CordianteY && board[ghosts[i].x][ghosts[i].y + 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 4) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
+				moveGhost(ghosts[i], 2);
+			}
+		} else if (randNum == 3) {
+			// Right = 4
+			if (Math.abs(PacmanX - (CordianteX + 1)) < disX && board[ghosts[i].x + 1][ghosts[i].y] != 4) {
+				moveGhost(ghosts[i], 4);
+			}
+			// Left = 3
+			else if (Math.abs(PacmanX - (CordianteX - 1)) < disX && board[ghosts[i].x - 1][ghosts[i].y] != 4) {
+				moveGhost(ghosts[i], 3);
+			}
+			// Down = 2
+			else if (PacmanY > CordianteY && board[ghosts[i].x][ghosts[i].y + 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 4) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
+				moveGhost(ghosts[i], 2);
+			}
+			// Up = 1
+			else if (PacmanY < CordianteY && board[ghosts[i].x][ghosts[i].y - 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 6) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
+				moveGhost(ghosts[i], 1);
+			}
+		} else if (randNum == 4) {
+			// Left = 3
+			if (Math.abs(PacmanX - (CordianteX - 1)) < disX  && board[ghosts[i].x - 1][ghosts[i].y] != 4) {
+				moveGhost(ghosts[i], 3);
+			}
+			// Down = 2
+			else if (PacmanY > CordianteY && board[ghosts[i].x][ghosts[i].y + 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 4) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
+				moveGhost(ghosts[i], 3);
+			}
+			// Up = 1
+			else if (PacmanY < CordianteY && board[ghosts[i].x][ghosts[i].y - 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 6) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
+				moveGhost(ghosts[i], 1);
+			}
+			// Right = 4
+			else if (Math.abs(PacmanX - (CordianteX + 1)) < disX && board[ghosts[i].x + 1][ghosts[i].y] != 4) {
+				moveGhost(ghosts[i], 4);
+			}
+		}
 	}
 }

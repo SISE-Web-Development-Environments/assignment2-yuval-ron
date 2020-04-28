@@ -89,22 +89,22 @@
 				<tr>
 					<th><label for="RightMove">Move Right</label></th>
 					<th><input id="RightMove" type="text" value="ArrowRight" readonly /></th>
-					<th><button onclick="setMoveRight()">Change</button></th>
+					<th><button id="RightMoveButton" onclick="setMoveRight()">Change</button></th>
 				</tr>
 				<tr>
 					<th><label for="LeftMove">Move Left</label></th>
 					<th><input id="LeftMove" type="text" value="ArrowLeft" readonly /></th>
-					<th><button onclick="setMoveLeft()">Change</button></th>
+					<th><button id="LeftMoveButton" onclick="setMoveLeft()">Change</button></th>
 				</tr>
 				<tr>
 					<th><label for="UpMove">Move Up</label></th>
 					<th><input id="UpMove" type="text" value="ArrowUp" readonly /></th>
-					<th><button onclick="setMoveUp()">Change</button></th>
+					<th><button id="UpMoveButton" onclick="setMoveUp()">Change</button></th>
 				</tr>
 				<tr>
 					<th><label for="DownMove">Move Down</label></th>
 					<th><input id="DownMove" type="text" value="ArrowDown" readonly /></th>
-					<th><button onclick="setMoveDown()">Change</button></th>
+					<th><button id="DownMoveButton" onclick="setMoveDown()">Change</button></th>
 				</tr>
 				<tr>
 					<th><label for="firstFoodColor">First food color: </label></th>
@@ -125,9 +125,17 @@
 					<th><input id="thirdFoodPoints" type="text" value="25"/></th>
 				</tr>
 				<tr>
-					<th><label for="amountOfFood">Amount of food(range 50-90): </label></th>
+					<th><label for="amountOfFood">Amount of food: </label></th>
 					<th><input type="text" id="amountOfFood" value="50"></th>
 				</tr>
+				<tr>
+					<th><label for="amountOfTime">time for game: </label></th>
+					<th><input type="text" id="amountOfTime" value="60"></th>
+				</tr>
+				<tr>
+					<th><label for="amountOfGhosts">Amount of ghosts: </label></th>
+					<th><input type="text" id="amountOfGhosts" value="4"></th>
+				</tr>				
 				<tr>
 					<th><button id="randomSettingsButton" onclick="setSettingsRandom()">random values</button></th>
 				</tr>
