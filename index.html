@@ -83,27 +83,82 @@
 		</div>
 	</div>
 
-	<div id="gamePage" style="text-align: center;" class="hidden ">
-		<div>
-			<label id="welcomeUser">Pacman Name: </label>
+	<div id="gamePage" style="text-align: center; align-content: center;" class="float-container; hidden ">
+		<div id="chooseSettings" style="text-align: center;" class="float-child">
+			<table>
+				<tr>
+					<th><label for="RightMove">Move Right</label></th>
+					<th><input id="RightMove" type="text" value="ArrowRight" readonly /></th>
+					<th><button onclick="setMoveRight()">Change</button></th>
+				</tr>
+				<tr>
+					<th><label for="LeftMove">Move Left</label></th>
+					<th><input id="LeftMove" type="text" value="ArrowLeft" readonly /></th>
+					<th><button onclick="setMoveLeft()">Change</button></th>
+				</tr>
+				<tr>
+					<th><label for="UpMove">Move Up</label></th>
+					<th><input id="UpMove" type="text" value="ArrowUp" readonly /></th>
+					<th><button onclick="setMoveUp()">Change</button></th>
+				</tr>
+				<tr>
+					<th><label for="DownMove">Move Down</label></th>
+					<th><input id="DownMove" type="text" value="ArrowDown" readonly /></th>
+					<th><button onclick="setMoveDown()">Change</button></th>
+				</tr>
+				<tr>
+					<th><label for="firstFoodColor">First food color: </label></th>
+					<th><input type="color" id="firstFoodColor" value="#FFFF00"></th>
+					<th><label for="firstFoodPoints">First food points: </label></th>
+					<th><input id="firstFoodPoints" type="text" value="5" /></th>
+				</tr>
+				<tr>
+					<th><label for="secondFoodColor">Second food color: </label></th>
+					<th><input type="color" id="secondFoodColor" value="#FF4500"></th>
+					<th><label for="secondFoodPoints">Second food points: </label></th>
+					<th><input id="secondFoodPoints" type="text" value="15"/></th>
+				</tr>
+				<tr>
+					<th><label for="thirdFoodColor">Third food color: </label></th>
+					<th><input type="color" id="thirdFoodColor" value="#00FF7F"></th>
+					<th><label for="thirdFoodPoints">Third food points: </label></th>
+					<th><input id="thirdFoodPoints" type="text" value="25"/></th>
+				</tr>
+				<tr>
+					<th><label for="amountOfFood">Amount of food(range 50-90): </label></th>
+					<th><input type="text" id="amountOfFood" value="50"></th>
+				</tr>
+				<tr>
+					<th><button id="randomSettingsButton" onclick="setSettingsRandom()">random values</button></th>
+				</tr>
+				<tr>
+					<th><button id="moveToGameButton" onclick="moveToGame()">start game</button></th>
+				</tr>
+			</table>
 		</div>
-		<div id="score">
-			<label for="lblScore">SCORE:</label>
-			<input id="lblScore" type="text" />
-		</div>
-		<div id="time">
-			<label for="lblTime">TIME:</label>
-			<input id="lblTime" type="text" />
-		</div>
-		<div id="lives">
-			<label for="lblTime">Lives:</label>
-			<input id="lblTime" type="text" />
-		</div>
-		<div id="game">
-			<canvas id="canvas" width="640" height="440"></canvas>
-		</div>
-		<div>
-			<button onclick="restartGame()">Start New Game</button>
+
+		<div id="gameboard" class="float-child; hidden">
+			<div>
+				<label id="welcomeUser">Pacman Name: </label>
+			</div>
+			<div id="score">
+				<label for="lblScore">SCORE:</label>
+				<input id="lblScore" type="text" />
+			</div>
+			<div id="time">
+				<label for="lblTime">TIME:</label>
+				<input id="lblTime" type="text" />
+			</div>
+			<div id="lives">
+				<label for="lblTime">Lives:</label>
+				<input id="lblTime" type="text" />
+			</div>
+			<div id="game">
+				<canvas id="canvas" width="640" height="440"></canvas>
+			</div>
+			<div>
+				<button id="restartGameButton" onclick="restartGame()">Start New Game</button>				
+			</div>
 		</div>
 	</div>
 
@@ -263,7 +318,6 @@
 					document.getElementById("register").style.display = "none";
 					document.getElementById("login").style.display = "none";
 					document.getElementById("welcome").style.display = "none";
-					Start();
 				}
 			}
 			else {

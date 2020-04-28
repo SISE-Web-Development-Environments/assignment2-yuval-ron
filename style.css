@@ -228,3 +228,12 @@ nav a:hover::before {
     from {top:-300px; opacity:0}
     to {top:0; opacity:1}
   }
+
+.float-container {
+    padding: 20px;
+}
+
+.float-child {
+    float: left;
+    padding: 20px;
+}  
