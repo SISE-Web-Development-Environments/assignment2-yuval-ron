@@ -116,13 +116,13 @@
 					<th><label for="secondFoodColor">Second food color: </label></th>
 					<th><input type="color" id="secondFoodColor" value="#FF4500"></th>
 					<th><label for="secondFoodPoints">Second food points: </label></th>
-					<th><input id="secondFoodPoints" type="text" value="15"/></th>
+					<th><input id="secondFoodPoints" type="text" value="15" /></th>
 				</tr>
 				<tr>
 					<th><label for="thirdFoodColor">Third food color: </label></th>
 					<th><input type="color" id="thirdFoodColor" value="#00FF7F"></th>
 					<th><label for="thirdFoodPoints">Third food points: </label></th>
-					<th><input id="thirdFoodPoints" type="text" value="25"/></th>
+					<th><input id="thirdFoodPoints" type="text" value="25" /></th>
 				</tr>
 				<tr>
 					<th><label for="amountOfFood">Amount of food: </label></th>
@@ -130,12 +130,12 @@
 				</tr>
 				<tr>
 					<th><label for="amountOfTime">time for game: </label></th>
-					<th><input type="text" id="amountOfTime" value="60"></th>
+					<th><input type="text" id="amountOfTime" value="60"> </th>
 				</tr>
 				<tr>
 					<th><label for="amountOfGhosts">Amount of ghosts: </label></th>
 					<th><input type="text" id="amountOfGhosts" value="4"></th>
-				</tr>				
+				</tr>
 				<tr>
 					<th><button id="randomSettingsButton" onclick="setSettingsRandom()">random values</button></th>
 				</tr>
@@ -165,7 +165,7 @@
 				<canvas id="canvas" width="640" height="440"></canvas>
 			</div>
 			<div>
-				<button id="restartGameButton" onclick="restartGame()">Start New Game</button>				
+				<button id="restartGameButton" onclick="restartGame()">Start New Game</button>
 			</div>
 		</div>
 	</div>
@@ -194,8 +194,7 @@
 
 
 	<script>//scripts to login/register and navigate
-		window.alert("Good");
-		let loggedIn = true;
+		let loggedIn = false;
 		let currentUser = "Not Logged In";
 		const users = [];
 		let firstUser = {
@@ -208,8 +207,6 @@
 		users.push(firstUser);
 
 		function verifyInformation() {//for login
-			//window.alert("Your username is: " + document.getElementById("loginUsername").value + " and your password is: " + document.getElementById("loginPassword").value);
-
 			givenUsername = document.getElementById("loginUsername").value;
 			givenPassword = document.getElementById("loginPassword").value;
 			let i;
@@ -236,8 +233,7 @@
 				window.alert("You need to fill all fields in order to continue");
 				return;
 			}
-
-			if ($('#registerPassword').val() < 6) {
+			if ($('#registerPassword').val().length < 6) {
 				window.alert("Password need to be at least 6 characters long")
 				return;
 			}
@@ -263,6 +259,7 @@
 			//add the user to the users array
 			users.push(newUser);
 			window.alert("You have successfully Register to the site with username: " + users[users.length - 1].username);
+			showLogin();
 		}
 
 		function validateEmail(email) {
@@ -335,6 +332,7 @@
 
 		function logOut() {
 			loggedIn = false;
+			removeGameIntervals();
 			document.getElementById("showLoginButton").style.display = "block";
 			document.getElementById("showRegisterButton").style.display = "none";
 			document.getElementById("showLogoutButton").style.display = "none";

@@ -9,6 +9,7 @@ var remainingTime;
 var interval;
 var ghostsInterval;
 var timeInterval;
+var specialCharacterInterval;
 var lastMoved = "right";
 var ghosts = [];
 var lives = 5;
@@ -25,6 +26,14 @@ var secondFoodColor;
 var secondFoodPoints;
 var thirdFoodColor;
 var thirdFoodPoints;
+var specialCharacter;
+var strongMode = false;
+var strongTimer;
+let radius = 15;
+let eyeRadius = 3;
+let eyeXOffset = 7;
+let eyeYOffset = 5;
+
 
 $(document).ready(function () {
 	context = canvas.getContext("2d");
@@ -46,7 +55,9 @@ $(document).ready(function () {
 });
 
 function moveToGame() {//function that is being called after finishing to edit the settings
-	// TODO check that every field is ok
+	if(!checkIfAllFieldsAreGood()) {//if there is a problem with some of the fields we won't start
+		return;
+	}
 	firstFoodColor = document.getElementById("firstFoodColor").value;
 	firstFoodPoints = parseInt(document.getElementById("firstFoodPoints").value);
 	secondFoodColor = document.getElementById("secondFoodColor").value;
@@ -68,6 +79,11 @@ function moveToGame() {//function that is being called after finishing to edit t
 	}
 	if (amountOfGhosts > 3) {
 		addGhost("orange", 15, 0);
+	}
+	specialCharacter = {
+		x: 0,
+		y: 0,
+		alive: true
 	}
 	document.getElementById("gameboard").style.display = "none";
 	document.getElementById("RightMoveButton").style.display = "none";
@@ -94,14 +110,14 @@ function setMoveRight() {
 	document.removeEventListener('keydown', keydownHandler, false);
 	setWay = "right";
 	document.addEventListener('keydown', keydownHandler, false);
-	window.alert("Press a key you want");
+	window.alert("after exiting this message, press any key you want");
 }
 
 function setMoveLeft() {
 	document.removeEventListener('keydown', keydownHandler, false);
 	setWay = "left";
 	document.addEventListener('keydown', keydownHandler, false);
-	window.alert("Press a key you want");
+	window.alert("after exiting this message, press any key you want");
 }
 
 function setMoveUp() {
@@ -115,7 +131,7 @@ function setMoveDown() {
 	document.removeEventListener('keydown', keydownHandler, false);
 	setWay = "down";
 	document.addEventListener('keydown', keydownHandler, false);
-	window.alert("Press a key you want");
+	window.alert("after exiting this message, press any key you want");
 }
 
 function keydownHandler(e) {
@@ -149,9 +165,7 @@ function addGhost(ghostColor, startX, startY) {
 function countTimer() {
 	remainingTime -= 0.1;
 	if (remainingTime <= 0) {//Time's up
-		window.clearInterval(interval);
-		window.clearInterval(ghostsInterval);
-		window.clearInterval(timeInterval);
+		removeGameIntervals();
 		if (score < 100) {
 			window.alert("You are better than " + score + " points!");
 		}
@@ -159,15 +173,16 @@ function countTimer() {
 			window.alert("Winner!!!");
 		}
 	}
-	/*if(remainingTime < 40) {
-		window.alert("Number of food eaten: " + foodEaten + " and number of total is: " + amountOfTotalFood)
-	}*/
 	Draw();
 	if (foodEaten == amountOfTotalFood) {//the player ate all the food and finished the game
-		window.clearInterval(interval);
-	window.clearInterval(ghostsInterval);
-	window.clearInterval(timeInterval);
+		removeGameIntervals();
 		window.alert("Game completed");
+	}
+	if (strongMode) {
+		strongTimer -= 0.1
+		if (strongTimer <= 0) {
+			strongMode = false;
+		}
 	}
 }
 
@@ -187,8 +202,9 @@ function setSettingsRandom() {
 	document.getElementById("secondFoodPoints").value = Math.floor(Math.random() * 100) + 1;
 	document.getElementById("thirdFoodColor").value = getRandomColor();
 	document.getElementById("thirdFoodPoints").value = Math.floor(Math.random() * 100) + 1;
-	document.getElementById("amountOfFood").value = Math.floor(Math.random() * 90) + 40;
+	document.getElementById("amountOfFood").value = Math.floor(Math.random() * 40) + 50;
 	document.getElementById("amountOfGhosts").value = Math.floor(Math.random() * 4) + 1;
+	document.getElementById("amountOfTime").value = Math.floor(Math.random() * 60) + 60;
 }
 
 function getRandomColor() {
@@ -200,11 +216,15 @@ function getRandomColor() {
 	return color;
 }
 
-function restartGame() {
+function removeGameIntervals() {
 	window.clearInterval(interval);
 	window.clearInterval(ghostsInterval);
 	window.clearInterval(timeInterval);
+	window.clearInterval(specialCharacterInterval);
+}
 
+function restartGame() {
+	removeGameIntervals();
 	document.getElementById("RightMoveButton").style.display = "block";
 	document.getElementById("LeftMoveButton").style.display = "block";
 	document.getElementById("UpMoveButton").style.display = "block";
@@ -225,8 +245,9 @@ function restartGame() {
 }
 
 function Start() {
-	ghostsInterval = setInterval(moveGhostSmartly, 1000);
+	ghostsInterval = setInterval(moveGhostSmartly, 600);
 	interval = setInterval(UpdatePosition, 100);
+	specialCharacterInterval = setInterval(moveSmileyRandomly, 400);
 	timeInterval = setInterval(countTimer, 100);
 	keysDown = [];
 	foodEaten = 0;
@@ -326,7 +347,10 @@ function Start() {
 			totalFoodRemain--;
 		}
 	}
-	window.alert("This suppse to be 0: " + totalFoodRemain);
+	for (let i = 0; i < 2; i++) {
+		emptyCell = findRandomEmptyCell(board);
+		board[emptyCell[0]][emptyCell[1]] = 12;
+	}
 }
 
 function findRandomEmptyCell(board) {
@@ -382,11 +406,10 @@ function loseLiveAndRestart() {
 		random = findRandomEmptyMiddleCell(board);
 		shape.x = random[0];
 		shape.y = random[1];
+		board[shape.x][shape.y] = 2;
 	} else {
 		// the user used all his lives
-		window.clearInterval(interval);
-		window.clearInterval(ghostsInterval);
-		window.clearInterval(timeInterval);
+		removeGameIntervals();
 		window.alert("Loser!");
 	}
 }
@@ -469,19 +492,32 @@ function Draw() {
 				}
 			} else if (board[i][j] == 1) {// food1
 				context.beginPath();
-				context.arc(center.x, center.y, 5, 0, 2 * Math.PI); // circle
+				context.arc(center.x, center.y, 3, 0, 2 * Math.PI); // circle
 				context.fillStyle = firstFoodColor; //color
 				context.fill();
 			} else if (board[i][j] == 10) {// food2
 				context.beginPath();
-				context.arc(center.x, center.y, 5, 0, 2 * Math.PI); // circle
+				context.arc(center.x, center.y, 3, 0, 2 * Math.PI); // circle
 				context.fillStyle = secondFoodColor; //color
 				context.fill();
 			}
 			else if (board[i][j] == 11) {// food3
 				context.beginPath();
-				context.arc(center.x, center.y, 5, 0, 2 * Math.PI); // circle
+				context.arc(center.x, center.y, 3, 0, 2 * Math.PI); // circle
 				context.fillStyle = thirdFoodColor; //color
+				context.fill();
+			}
+			else if (board[i][j] == 12) {
+				context.fillStyle = "red"; //red
+				context.beginPath();
+				context.arc(center.x, center.y, 5, 0, Math.PI, true);
+				context.closePath();
+				context.fill();
+
+				context.fillStyle = "blue"; //blue
+				context.beginPath();
+				context.arc(center.x, center.y, 5, Math.PI, Math.PI * 2, true);
+				context.closePath();
 				context.fill();
 			}
 			else if (board[i][j] == 4) {// wall
@@ -491,6 +527,35 @@ function Draw() {
 				context.fill();
 			}
 		}
+	}
+	if (specialCharacter.alive) {
+		let smileyCenter = new Object();
+		smileyCenter.x = specialCharacter.x * 40 + 20;
+		smileyCenter.y = specialCharacter.y * 40 + 20;
+
+		// draw the yellow circle
+		context.beginPath();
+		context.arc(smileyCenter.x, smileyCenter.y, radius, 0, 2 * Math.PI, false);
+		context.fillStyle = 'yellow';
+		context.fill();
+		context.lineWidth = 1;
+		context.strokeStyle = 'black';
+		context.stroke();
+
+		// draw the eyes
+		context.beginPath();
+		let eyeX = smileyCenter.x - eyeXOffset;
+		let eyeY = smileyCenter.y - eyeYOffset;
+		context.arc(eyeX, eyeY, eyeRadius, 0, 2 * Math.PI, false);
+		eyeX = smileyCenter.x + eyeXOffset;
+		context.arc(eyeX, eyeY, eyeRadius, 0, 2 * Math.PI, false);
+		context.fillStyle = 'black';
+		context.fill();
+
+		// draw the mouth
+		context.beginPath();
+		context.arc(smileyCenter.x, smileyCenter.y + 2, 5, 0, Math.PI, false);
+		context.stroke();
 	}
 	for (let i = 0; i < ghosts.length; i++) {//draw ghosts
 		let center = new Object();
@@ -506,7 +571,12 @@ function Draw() {
 		context.lineTo(center.x - 8, center.y + 5 + 8);
 		context.lineTo(center.x - 12, center.y + 5 + 10);
 		context.lineTo(center.x - 12, center.y + 5);
-		context.fillStyle = ghosts[i].color; //color
+		if (strongMode) {
+			context.fillStyle = "DarkBlue";
+		}
+		else {
+			context.fillStyle = ghosts[i].color;
+		}
 		context.fill();
 
 		context.beginPath();
@@ -520,11 +590,10 @@ function Draw() {
 	}
 }
 
-function moveGhostRandomly() {
-	for (let i = 0; i < ghosts.length; i++) {
-		let randomNumber = Math.floor(Math.random() * 4) + 1;
-		moveGhost(ghosts[i], randomNumber);
-	}
+function moveSmileyRandomly() {
+	let randomNumber = Math.floor(Math.random() * 4) + 1;
+	moveSpecialCharacter(specialCharacter, randomNumber);
+	Draw();
 }
 
 
@@ -532,69 +601,69 @@ function moveGhostRandomly() {
 function UpdatePosition() {
 	board[shape.x][shape.y] = 0;
 	var x = GetKeyPressed();
-	if (x == 1) {
-		//up
-		if (
-			shape.y > 0 &&
-			board[shape.x][shape.y - 1] != 4 &&
-			!((shape.y == 5 || shape.y == 6) && (shape.x < 3 || shape.x > 12))
-		) {
+	if (x == 1) {//up
+		if (shape.y > 0 && board[shape.x][shape.y - 1] != 4 && !((shape.y == 5 || shape.y == 6) && (shape.x < 3 || shape.x > 12))) {
 			shape.y--;
 		}
 	}
-	if (x == 2) {
-		//down
-		if (
-			shape.y < 10 &&
-			board[shape.x][shape.y + 1] != 4 &&
-			!((shape.y == 5 || shape.y == 4) && (shape.x < 3 || shape.x > 12))
-		) {
+	if (x == 2) {//down
+		if (shape.y < 10 && board[shape.x][shape.y + 1] != 4 && !((shape.y == 5 || shape.y == 4) && (shape.x < 3 || shape.x > 12))) {
 			shape.y++;
 		}
 	}
-	if (x == 3) {
-		//left
+	if (x == 3) {//left
 		if (shape.x > 0 && board[shape.x - 1][shape.y] != 4) {
 			shape.x--;
-		} else if (shape.y == 5 && shape.x == 0) {
-			//need to teleport him to the other side
+		} else if (shape.y == 5 && shape.x == 0) {//need to teleport him to the other side
 			shape.x = 15;
 		}
 	}
-	if (x == 4) {
-		//right
+	if (x == 4) {//right
 		if (shape.x < 15 && board[shape.x + 1][shape.y] != 4) {
 			shape.x++;
-		} else if (shape.y == 5 && shape.x == 15) {
-			//need to teleport him to the other side
+		} else if (shape.y == 5 && shape.x == 15) {//need to teleport him to the other side
 			shape.x = 0;
 		}
 	}
-	if (board[shape.x][shape.y] == 1) {
-		//if it's a normal score we raise the score
+	if (board[shape.x][shape.y] == 1) {//eat first food
 		score += firstFoodPoints;
 		foodEaten++;
 	}
-	else if (board[shape.x][shape.y] == 10) {
+	else if (board[shape.x][shape.y] == 10) {//eat second food
 		score += secondFoodPoints;
 		foodEaten++;
 	}
-	else if (board[shape.x][shape.y] == 11) {
+	else if (board[shape.x][shape.y] == 11) {//eat third food
 		score += thirdFoodPoints;
 		foodEaten++;
 	}
+	else if (board[shape.x][shape.y] == 12) {//eat strong pill
+		strongMode = true;
+		strongTimer = 6;
+	}
 	board[shape.x][shape.y] = 2;
-	//Draw();
 	for (let i = 0; i < ghosts.length; i++) {
 		if (shape.x == ghosts[i].x && shape.y == ghosts[i].y) {
-			loseLiveAndRestart();
+			if(strongMode) {
+				score += 20;
+				ghosts[i].x = ghosts[i].initialX;
+				ghosts[i].y = ghosts[i].initialY;
+			}
+			else{
+				loseLiveAndRestart();
+			}
 		}
 	}
-	var currentTime = new Date();
-	time_elapsed = (currentTime - start_time) / 1000;
-	if (score >= 20 && time_elapsed <= 10) {
-		pac_color = "green";
+	if (shape.x == smiley.x && shape.y == smiley.y) {//if we touch the smiley
+		smiley.alive = false;
+		smiley.x = -1;
+		smiley.y = -1;
+		score += 50;
 	}
+	//Draw();
+	/*if (score >= 20) {
+		pac_color = "green";
+	}*/
 }
 
 function moveGhost(creature, way) {
@@ -655,10 +724,42 @@ function moveGhost(creature, way) {
 		}
 	}
 	if (shape.x == creature.x && shape.y == creature.y) {
-		loseLiveAndRestart();
+		if(strongMode) {
+			score += 20;
+			creature.x = creature.initialX;
+			creature.y = creature.initialY;
+		}
+		else{
+			loseLiveAndRestart();
+		}
 	}
 }
 
+function checkIfAllFieldsAreGood() {
+	let amountOfFoodValue = $('#amountOfFood').val();
+	let amountOfTimeValue = $('#amountOfTime').val();
+	let amountOfGhostsValue = $('#amountOfGhosts').val();
+	let firstFoodPointsValue = $('#firstFoodPoints').val();
+	let secondFoodPointsValue = $('#secondFoodPoints').val();
+	let thirdFoodPointsValue = $('#thirdFoodPoints').val();
+	if(isNaN(amountOfFoodValue) || isNaN(amountOfTimeValue) || isNaN(amountOfGhostsValue) || isNaN(firstFoodPointsValue) || isNaN(secondFoodPointsValue) || isNaN(thirdFoodPointsValue)) {
+		window.alert("Please enter only numbers");
+		return false;
+	}
+	if(amountOfFoodValue < 50 || amountOfFoodValue > 90) {
+		window.alert("Amount of food must be between 50 and 90");
+		return false;
+	}
+	if(amountOfTimeValue < 60) {
+		window.alert("Amount of time must be at least 60");
+		return false;
+	}
+	if(amountOfGhostsValue < 1 || amountOfGhostsValue > 4) {
+		window.alert("Amount of ghosts must be between 1 and 4");
+		return false;
+	}
+	return true;
+}
 //smart ghost movment
 function moveGhostSmartly() {
 	for (let i = 0; i < ghosts.length; i++) {
@@ -673,71 +774,186 @@ function moveGhostSmartly() {
 		if (randNum == 1) {
 			// Down = 2
 			if (PacmanY > CordianteY && board[ghosts[i].x][ghosts[i].y + 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 4) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
-				moveGhost(ghosts[i], 2);
+				if(strongMode) {
+					moveGhost(ghosts[i], 1);
+				}
+				else{
+					moveGhost(ghosts[i], 2);
+				}
 			}
 			// Up = 1
 			else if (PacmanY < CordianteY && board[ghosts[i].x][ghosts[i].y - 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 6) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
-				moveGhost(ghosts[i], 1);
+				if(strongMode) {
+					moveGhost(ghosts[i], 2);
+				}
+				else{
+					moveGhost(ghosts[i], 1);
+				}
 			}
 			// Right = 4
 			else if (Math.abs(PacmanX - (CordianteX + 1)) < disX && board[ghosts[i].x + 1][ghosts[i].y] != 4) {
-				moveGhost(ghosts[i], 4);
+				if(strongMode) {
+					moveGhost(ghosts[i], 3);
+				}
+				else{
+					moveGhost(ghosts[i], 4);
+				}
 			}
 			// Left = 3
 			else if (Math.abs(PacmanX - (CordianteX - 1)) < disX && board[ghosts[i].x - 1][ghosts[i].y] != 4) {
-				moveGhost(ghosts[i], 3);
+				if(strongMode) {
+					moveGhost(ghosts[i], 4);
+				}
+				else{
+					moveGhost(ghosts[i], 3);
+				}
 			}
 		} else if (randNum == 2) {
 			// Up = 1
 			if (PacmanY < CordianteY && board[ghosts[i].x][ghosts[i].y - 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 6) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
-				moveGhost(ghosts[i], 1);
+				if(strongMode) {
+					moveGhost(ghosts[i], 2);
+				}
+				else{
+					moveGhost(ghosts[i], 1);
+				}
 			}
 			// Right = 4
 			else if (Math.abs(PacmanX - (CordianteX + 1)) < disX && board[ghosts[i].x + 1][ghosts[i].y] != 4) {
-				moveGhost(ghosts[i], 4);
+				if(strongMode) {
+					moveGhost(ghosts[i], 3);
+				}
+				else{
+					moveGhost(ghosts[i], 4);
+				}
 			}
 			// Left = 3
 			else if (Math.abs(PacmanX - (CordianteX - 1)) < disX && board[ghosts[i].x - 1][ghosts[i].y] != 4) {
-				moveGhost(ghosts[i], 3);
+				if(strongMode) {
+					moveGhost(ghosts[i], 4);
+				}
+				else{
+					moveGhost(ghosts[i], 3);
+				}
 			}
 			// Down = 2
 			else if (PacmanY > CordianteY && board[ghosts[i].x][ghosts[i].y + 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 4) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
-				moveGhost(ghosts[i], 2);
+				if(strongMode) {
+					moveGhost(ghosts[i], 1);
+				}
+				else{
+					moveGhost(ghosts[i], 2);
+				}
 			}
 		} else if (randNum == 3) {
 			// Right = 4
 			if (Math.abs(PacmanX - (CordianteX + 1)) < disX && board[ghosts[i].x + 1][ghosts[i].y] != 4) {
-				moveGhost(ghosts[i], 4);
+				if(strongMode) {
+					moveGhost(ghosts[i], 3);
+				}
+				else{
+					moveGhost(ghosts[i], 4);
+				}
 			}
 			// Left = 3
 			else if (Math.abs(PacmanX - (CordianteX - 1)) < disX && board[ghosts[i].x - 1][ghosts[i].y] != 4) {
-				moveGhost(ghosts[i], 3);
+				if(strongMode) {
+					moveGhost(ghosts[i], 4);
+				}
+				else{
+					moveGhost(ghosts[i], 3);
+				}
 			}
 			// Down = 2
 			else if (PacmanY > CordianteY && board[ghosts[i].x][ghosts[i].y + 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 4) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
-				moveGhost(ghosts[i], 2);
+				if(strongMode) {
+					moveGhost(ghosts[i], 1);
+				}
+				else{
+					moveGhost(ghosts[i], 2);
+				}
 			}
 			// Up = 1
 			else if (PacmanY < CordianteY && board[ghosts[i].x][ghosts[i].y - 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 6) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
-				moveGhost(ghosts[i], 1);
+				if(strongMode) {
+					moveGhost(ghosts[i], 2);
+				}
+				else{
+					moveGhost(ghosts[i], 1);
+				}
 			}
 		} else if (randNum == 4) {
 			// Left = 3
-			if (Math.abs(PacmanX - (CordianteX - 1)) < disX  && board[ghosts[i].x - 1][ghosts[i].y] != 4) {
-				moveGhost(ghosts[i], 3);
+			if (Math.abs(PacmanX - (CordianteX - 1)) < disX && board[ghosts[i].x - 1][ghosts[i].y] != 4) {
+				if(strongMode) {
+					moveGhost(ghosts[i], 4);
+				}
+				else{
+					moveGhost(ghosts[i], 3);
+				}
 			}
 			// Down = 2
 			else if (PacmanY > CordianteY && board[ghosts[i].x][ghosts[i].y + 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 4) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
-				moveGhost(ghosts[i], 3);
+				if(strongMode) {
+					moveGhost(ghosts[i], 1);
+				}
+				else{
+					moveGhost(ghosts[i], 2);
+				}
 			}
 			// Up = 1
 			else if (PacmanY < CordianteY && board[ghosts[i].x][ghosts[i].y - 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 6) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
-				moveGhost(ghosts[i], 1);
+				if(strongMode) {
+					moveGhost(ghosts[i], 2);
+				}
+				else{
+					moveGhost(ghosts[i], 1);
+				}
 			}
 			// Right = 4
 			else if (Math.abs(PacmanX - (CordianteX + 1)) < disX && board[ghosts[i].x + 1][ghosts[i].y] != 4) {
-				moveGhost(ghosts[i], 4);
+				if(strongMode) {
+					moveGhost(ghosts[i], 3);
+				}
+				else{
+					moveGhost(ghosts[i], 4);
+				}
 			}
 		}
+	}
+}
+
+function moveSpecialCharacter(smiley, way) {
+	if (way == 1) {//up
+		if (smiley.y > 0 && board[smiley.x][smiley.y - 1] != 4 && !((smiley.y == 5 || smiley.y == 6) && (smiley.x < 3 || smiley.x > 12))) {
+			smiley.y--;
+		}
+	}
+	if (way == 2) {//down
+		if (smiley.y < 10 && board[smiley.x][smiley.y + 1] != 4 && !((smiley.y == 5 || smiley.y == 4) && (smiley.x < 3 || smiley.x > 12))) {
+			smiley.y++;
+		}
+	}
+	if (way == 3) {//left
+		if (smiley.x > 0 && board[smiley.x - 1][smiley.y] != 4) {
+			smiley.x--;
+		}
+		else if (smiley.y == 5 && smiley.x == 0) {//need to teleport him to the other side
+			smiley.x = 15;
+		}
+	}
+	if (way == 4) {//right
+		if (smiley.x < 15 && board[smiley.x + 1][smiley.y] != 4) {
+			smiley.x++;
+		}
+		else if (smiley.y == 5 && smiley.x == 15) {//need to teleport him to the other side
+			smiley.x = 0;
+		}
+	}
+	if (shape.x == smiley.x && shape.y == smiley.y) {
+		smiley.alive = false;
+		smiley.x = -1;
+		smiley.y = -1;
+		score += 50;
 	}
 }
