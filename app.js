@@ -12,6 +12,7 @@ var timeInterval;
 var specialCharacterInterval;
 var lastMoved = "right";
 var ghosts = [];
+var deadGhosts = [];
 var lives = 5;
 var amountOfTotalFood;
 var foodEaten;
@@ -173,7 +174,6 @@ function countTimer() {
 			window.alert("Winner!!!");
 		}
 	}
-	Draw();
 	if (foodEaten == amountOfTotalFood) {//the player ate all the food and finished the game
 		removeGameIntervals();
 		window.alert("Game completed");
@@ -182,8 +182,12 @@ function countTimer() {
 		strongTimer -= 0.1
 		if (strongTimer <= 0) {
 			strongMode = false;
+			window.clearInterval(ghostsInterval);
+			ghostsInterval = setInterval(moveGhostSmartly, 700);
+			deadGhosts = [];
 		}
 	}
+	Draw();
 }
 
 function setSettingsRandom() {
@@ -245,9 +249,9 @@ function restartGame() {
 }
 
 function Start() {
-	ghostsInterval = setInterval(moveGhostSmartly, 600);
+	ghostsInterval = setInterval(moveGhostSmartly, 700);
 	interval = setInterval(UpdatePosition, 100);
-	specialCharacterInterval = setInterval(moveSmileyRandomly, 400);
+	specialCharacterInterval = setInterval(moveSmileyRandomly, 700);
 	timeInterval = setInterval(countTimer, 100);
 	keysDown = [];
 	foodEaten = 0;
@@ -558,6 +562,9 @@ function Draw() {
 		context.stroke();
 	}
 	for (let i = 0; i < ghosts.length; i++) {//draw ghosts
+		if(deadGhosts.includes(ghosts[i])) {//if it's dead we don't want to draw it
+			continue;
+		}
 		let center = new Object();
 		center.x = ghosts[i].x * 40 + 20;
 		center.y = ghosts[i].y * 40 + 20;
@@ -640,12 +647,24 @@ function UpdatePosition() {
 	else if (board[shape.x][shape.y] == 12) {//eat strong pill
 		strongMode = true;
 		strongTimer = 6;
+		window.clearInterval(ghostsInterval);
+		ghostsInterval = setInterval(moveGhostSmartly, 300);
+	}
+	if (shape.x == specialCharacter.x && shape.y == specialCharacter.y) {//if we touch the smiley
+		specialCharacter.alive = false;
+		specialCharacter.x = -1;
+		specialCharacter.y = -1;
+		score += 50;
 	}
 	board[shape.x][shape.y] = 2;
 	for (let i = 0; i < ghosts.length; i++) {
 		if (shape.x == ghosts[i].x && shape.y == ghosts[i].y) {
+			if(deadGhosts.includes(ghosts[i])) {
+				continue;
+			}
 			if(strongMode) {
 				score += 20;
+				deadGhosts.push(ghosts[i]);
 				ghosts[i].x = ghosts[i].initialX;
 				ghosts[i].y = ghosts[i].initialY;
 			}
@@ -654,12 +673,7 @@ function UpdatePosition() {
 			}
 		}
 	}
-	if (shape.x == smiley.x && shape.y == smiley.y) {//if we touch the smiley
-		smiley.alive = false;
-		smiley.x = -1;
-		smiley.y = -1;
-		score += 50;
-	}
+	
 	//Draw();
 	/*if (score >= 20) {
 		pac_color = "green";
@@ -763,6 +777,9 @@ function checkIfAllFieldsAreGood() {
 //smart ghost movment
 function moveGhostSmartly() {
 	for (let i = 0; i < ghosts.length; i++) {
+		if(deadGhosts.includes(ghosts[i])) {
+			continue;
+		}
 		let CordianteX = ghosts[i].x;
 		let CordianteY = ghosts[i].y;
 		let PacmanX = shape.x;
