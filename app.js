@@ -56,7 +56,7 @@ $(document).ready(function () {
 });
 
 function moveToGame() {//function that is being called after finishing to edit the settings
-	if(!checkIfAllFieldsAreGood()) {//if there is a problem with some of the fields we won't start
+	if (!checkIfAllFieldsAreGood()) {//if there is a problem with some of the fields we won't start
 		return;
 	}
 	firstFoodColor = document.getElementById("firstFoodColor").value;
@@ -105,6 +105,10 @@ function moveToGame() {//function that is being called after finishing to edit t
 	document.getElementById("moveToGameButton").style.display = "none";
 	document.getElementById("gameboard").style.display = "block";
 	Start();
+	gameSong = document.getElementById('gameSong');
+	gameSong.volume = 0.6;
+	gameSong.currentTime = 0;
+	gameSong.play();
 }
 
 function setMoveRight() {
@@ -225,6 +229,7 @@ function removeGameIntervals() {
 	window.clearInterval(ghostsInterval);
 	window.clearInterval(timeInterval);
 	window.clearInterval(specialCharacterInterval);
+	document.getElementById('gameSong').pause();
 }
 
 function restartGame() {
@@ -562,7 +567,7 @@ function Draw() {
 		context.stroke();
 	}
 	for (let i = 0; i < ghosts.length; i++) {//draw ghosts
-		if(deadGhosts.includes(ghosts[i])) {//if it's dead we don't want to draw it
+		if (deadGhosts.includes(ghosts[i])) {//if it's dead we don't want to draw it
 			continue;
 		}
 		let center = new Object();
@@ -659,25 +664,25 @@ function UpdatePosition() {
 	board[shape.x][shape.y] = 2;
 	for (let i = 0; i < ghosts.length; i++) {
 		if (shape.x == ghosts[i].x && shape.y == ghosts[i].y) {
-			if(deadGhosts.includes(ghosts[i])) {
+			if (deadGhosts.includes(ghosts[i])) {
 				continue;
 			}
-			if(strongMode) {
+			if (strongMode) {
 				score += 20;
 				deadGhosts.push(ghosts[i]);
 				ghosts[i].x = ghosts[i].initialX;
 				ghosts[i].y = ghosts[i].initialY;
 			}
-			else{
+			else {
+				if (ghosts[i].color == "red") {//if the ghost is red, it deals x2 dmg and minus x2 points
+					if(lives > 1) {
+						loseLiveAndRestart();
+					}
+				}
 				loseLiveAndRestart();
 			}
 		}
 	}
-	
-	//Draw();
-	/*if (score >= 20) {
-		pac_color = "green";
-	}*/
 }
 
 function moveGhost(creature, way) {
@@ -738,12 +743,17 @@ function moveGhost(creature, way) {
 		}
 	}
 	if (shape.x == creature.x && shape.y == creature.y) {
-		if(strongMode) {
+		if (strongMode) {
 			score += 20;
 			creature.x = creature.initialX;
 			creature.y = creature.initialY;
 		}
-		else{
+		else {
+			if (creature.color == "red") {//if the ghost is red, it deals x2 dmg and minus x2 points
+				if(lives > 1) {
+					loseLiveAndRestart();
+				}
+			}
 			loseLiveAndRestart();
 		}
 	}
@@ -756,19 +766,19 @@ function checkIfAllFieldsAreGood() {
 	let firstFoodPointsValue = $('#firstFoodPoints').val();
 	let secondFoodPointsValue = $('#secondFoodPoints').val();
 	let thirdFoodPointsValue = $('#thirdFoodPoints').val();
-	if(isNaN(amountOfFoodValue) || isNaN(amountOfTimeValue) || isNaN(amountOfGhostsValue) || isNaN(firstFoodPointsValue) || isNaN(secondFoodPointsValue) || isNaN(thirdFoodPointsValue)) {
+	if (isNaN(amountOfFoodValue) || isNaN(amountOfTimeValue) || isNaN(amountOfGhostsValue) || isNaN(firstFoodPointsValue) || isNaN(secondFoodPointsValue) || isNaN(thirdFoodPointsValue)) {
 		window.alert("Please enter only numbers");
 		return false;
 	}
-	if(amountOfFoodValue < 50 || amountOfFoodValue > 90) {
+	if (amountOfFoodValue < 50 || amountOfFoodValue > 90) {
 		window.alert("Amount of food must be between 50 and 90");
 		return false;
 	}
-	if(amountOfTimeValue < 60) {
+	if (amountOfTimeValue < 60) {
 		window.alert("Amount of time must be at least 60");
 		return false;
 	}
-	if(amountOfGhostsValue < 1 || amountOfGhostsValue > 4) {
+	if (amountOfGhostsValue < 1 || amountOfGhostsValue > 4) {
 		window.alert("Amount of ghosts must be between 1 and 4");
 		return false;
 	}
@@ -777,7 +787,7 @@ function checkIfAllFieldsAreGood() {
 //smart ghost movment
 function moveGhostSmartly() {
 	for (let i = 0; i < ghosts.length; i++) {
-		if(deadGhosts.includes(ghosts[i])) {
+		if (deadGhosts.includes(ghosts[i])) {
 			continue;
 		}
 		let CordianteX = ghosts[i].x;
@@ -791,148 +801,148 @@ function moveGhostSmartly() {
 		if (randNum == 1) {
 			// Down = 2
 			if (PacmanY > CordianteY && board[ghosts[i].x][ghosts[i].y + 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 4) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
-				if(strongMode) {
+				if (strongMode) {
 					moveGhost(ghosts[i], 1);
 				}
-				else{
+				else {
 					moveGhost(ghosts[i], 2);
 				}
 			}
 			// Up = 1
 			else if (PacmanY < CordianteY && board[ghosts[i].x][ghosts[i].y - 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 6) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
-				if(strongMode) {
+				if (strongMode) {
 					moveGhost(ghosts[i], 2);
 				}
-				else{
+				else {
 					moveGhost(ghosts[i], 1);
 				}
 			}
 			// Right = 4
 			else if (Math.abs(PacmanX - (CordianteX + 1)) < disX && board[ghosts[i].x + 1][ghosts[i].y] != 4) {
-				if(strongMode) {
+				if (strongMode) {
 					moveGhost(ghosts[i], 3);
 				}
-				else{
+				else {
 					moveGhost(ghosts[i], 4);
 				}
 			}
 			// Left = 3
 			else if (Math.abs(PacmanX - (CordianteX - 1)) < disX && board[ghosts[i].x - 1][ghosts[i].y] != 4) {
-				if(strongMode) {
+				if (strongMode) {
 					moveGhost(ghosts[i], 4);
 				}
-				else{
+				else {
 					moveGhost(ghosts[i], 3);
 				}
 			}
 		} else if (randNum == 2) {
 			// Up = 1
 			if (PacmanY < CordianteY && board[ghosts[i].x][ghosts[i].y - 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 6) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
-				if(strongMode) {
+				if (strongMode) {
 					moveGhost(ghosts[i], 2);
 				}
-				else{
+				else {
 					moveGhost(ghosts[i], 1);
 				}
 			}
 			// Right = 4
 			else if (Math.abs(PacmanX - (CordianteX + 1)) < disX && board[ghosts[i].x + 1][ghosts[i].y] != 4) {
-				if(strongMode) {
+				if (strongMode) {
 					moveGhost(ghosts[i], 3);
 				}
-				else{
+				else {
 					moveGhost(ghosts[i], 4);
 				}
 			}
 			// Left = 3
 			else if (Math.abs(PacmanX - (CordianteX - 1)) < disX && board[ghosts[i].x - 1][ghosts[i].y] != 4) {
-				if(strongMode) {
+				if (strongMode) {
 					moveGhost(ghosts[i], 4);
 				}
-				else{
+				else {
 					moveGhost(ghosts[i], 3);
 				}
 			}
 			// Down = 2
 			else if (PacmanY > CordianteY && board[ghosts[i].x][ghosts[i].y + 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 4) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
-				if(strongMode) {
+				if (strongMode) {
 					moveGhost(ghosts[i], 1);
 				}
-				else{
+				else {
 					moveGhost(ghosts[i], 2);
 				}
 			}
 		} else if (randNum == 3) {
 			// Right = 4
 			if (Math.abs(PacmanX - (CordianteX + 1)) < disX && board[ghosts[i].x + 1][ghosts[i].y] != 4) {
-				if(strongMode) {
+				if (strongMode) {
 					moveGhost(ghosts[i], 3);
 				}
-				else{
+				else {
 					moveGhost(ghosts[i], 4);
 				}
 			}
 			// Left = 3
 			else if (Math.abs(PacmanX - (CordianteX - 1)) < disX && board[ghosts[i].x - 1][ghosts[i].y] != 4) {
-				if(strongMode) {
+				if (strongMode) {
 					moveGhost(ghosts[i], 4);
 				}
-				else{
+				else {
 					moveGhost(ghosts[i], 3);
 				}
 			}
 			// Down = 2
 			else if (PacmanY > CordianteY && board[ghosts[i].x][ghosts[i].y + 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 4) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
-				if(strongMode) {
+				if (strongMode) {
 					moveGhost(ghosts[i], 1);
 				}
-				else{
+				else {
 					moveGhost(ghosts[i], 2);
 				}
 			}
 			// Up = 1
 			else if (PacmanY < CordianteY && board[ghosts[i].x][ghosts[i].y - 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 6) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
-				if(strongMode) {
+				if (strongMode) {
 					moveGhost(ghosts[i], 2);
 				}
-				else{
+				else {
 					moveGhost(ghosts[i], 1);
 				}
 			}
 		} else if (randNum == 4) {
 			// Left = 3
 			if (Math.abs(PacmanX - (CordianteX - 1)) < disX && board[ghosts[i].x - 1][ghosts[i].y] != 4) {
-				if(strongMode) {
+				if (strongMode) {
 					moveGhost(ghosts[i], 4);
 				}
-				else{
+				else {
 					moveGhost(ghosts[i], 3);
 				}
 			}
 			// Down = 2
 			else if (PacmanY > CordianteY && board[ghosts[i].x][ghosts[i].y + 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 4) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
-				if(strongMode) {
+				if (strongMode) {
 					moveGhost(ghosts[i], 1);
 				}
-				else{
+				else {
 					moveGhost(ghosts[i], 2);
 				}
 			}
 			// Up = 1
 			else if (PacmanY < CordianteY && board[ghosts[i].x][ghosts[i].y - 1] != 4 && !((ghosts[i].y == 5 || ghosts[i].y == 6) && (ghosts[i].x < 3 || ghosts[i].x > 12))) {
-				if(strongMode) {
+				if (strongMode) {
 					moveGhost(ghosts[i], 2);
 				}
-				else{
+				else {
 					moveGhost(ghosts[i], 1);
 				}
 			}
 			// Right = 4
 			else if (Math.abs(PacmanX - (CordianteX + 1)) < disX && board[ghosts[i].x + 1][ghosts[i].y] != 4) {
-				if(strongMode) {
+				if (strongMode) {
 					moveGhost(ghosts[i], 3);
 				}
-				else{
+				else {
 					moveGhost(ghosts[i], 4);
 				}
 			}

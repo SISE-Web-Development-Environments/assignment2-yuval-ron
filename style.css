@@ -237,3 +237,11 @@ nav a:hover::before {
     float: left;
     padding: 20px;
 }  
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: transparent;
+    text-align: center;
+ }

@@ -10,343 +10,377 @@
 </head>
 
 <body>
+		<header>
+			<div class="menu">
+				<nav>
+					<ul>
+						<!--<li><button id="showGameButton" class="btn" onclick="showGame()">Game</button> </li>-->
+						<li><img src="logo.png" style="background-color: transparent;" alt="logoMenu" height="15px">
+						</li>
+						<li><button id="showLoginButton" class="btn" onclick="showLogin()">Login</button></li>
+						<li><button id="showLogoutButton" class="btn hidden" onclick="logOut()">Log out</button></li>
+						<li><button id="showRegisterButton" class="btn" onclick="showRegister()">Register</button></li>
+						<li><button id="showAboutButton" class="btn" onclick="showAbout()">About</button></li>
+						<li>
+							<div>Yuval Khoramian - 207611492 <br />
+								Ron Zeidman - 315154864</div>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</header>
 
-	<header>
-		<div class="menu">
-			<nav>
-				<ul>
-					<li><button id="showGameButton" class="btn" onclick="showGame()">Game</button> </li>
-					<li><button id="showLoginButton" class="btn" onclick="showLogin()">Login</button></li>
-					<li><button id="showLogoutButton" class="btn hidden" onclick="logOut()">Log out</button></li>
-					<li><button id="showRegisterButton" class="btn" onclick="showRegister()">Register</button></li>
-					<li><button id="showAboutButton" class="btn" onclick="showAbout()">About</button></li>
-				</ul>
-			</nav>
+		<h3 id="welcome" style="text-align: center;">
+			Hello and welcome to pacman website.<br />
+			Please login or Register ! <br />
+			<img src="logo.png" style="background-color: transparent;" alt="logo" height="50%" width="50%">
+		</h3>
+
+		<div id="register" class="hidden">
+			<table class="flex-center flex-column">
+				<tr>
+					<th> <label for="username"><b>Username:</b></label> </th>
+					<th> <input type="text" placeholder="username" id="registerUsername"> </th>
+				</tr>
+				<tr>
+					<th> <label for="password"><b>Password:</b></label> </th>
+					<th> <input type="password" placeholder="password" id="registerPassword"> </th>
+				</tr>
+				<tr>
+					<th> <label for="name"><b>Full Name:</b></label> </th>
+					<th> <input type="text" placeholder="name" id="registerName"> </th>
+				</tr>
+				<tr>
+					<th> <label for="email"><b>Email:</b></label> </th>
+					<th> <input type="text" placeholder="email" id="registerEmail"> </th>
+				</tr>
+				<tr>
+					<th> <label for="birthday">Birthday:</label> </th>
+					<th> <input type="date" id="registerBirthday"> </th>
+				</tr>
+				<tr>
+					<th><button onclick="registerUser()">Register</button></th>
+				</tr>
+			</table>
 		</div>
-	</header>
-
-	<h3 id="welcome" style="text-align: center;">
-		Hello and welcome to pacman website.<br />
-		Please login or Register !
-	</h3>
-
-	<div id="register" class="hidden">
-		<table class="flex-center flex-column">
-			<tr>
-				<th> <label for="username"><b>Username:</b></label> </th>
-				<th> <input type="text" placeholder="username" id="registerUsername"> </th>
-			</tr>
-			<tr>
-				<th> <label for="password"><b>Password:</b></label> </th>
-				<th> <input type="password" placeholder="password" id="registerPassword"> </th>
-			</tr>
-			<tr>
-				<th> <label for="name"><b>Full Name:</b></label> </th>
-				<th> <input type="text" placeholder="name" id="registerName"> </th>
-			</tr>
-			<tr>
-				<th> <label for="email"><b>Email:</b></label> </th>
-				<th> <input type="text" placeholder="email" id="registerEmail"> </th>
-			</tr>
-			<tr>
-				<th> <label for="birthday">Birthday:</label> </th>
-				<th> <input type="date" id="registerBirthday"> </th>
-			</tr>
-			<tr>
-				<th><button onclick="registerUser()">Register</button></th>
-			</tr>
-		</table>
-	</div>
-	<div id="login" class="hidden">
-		<table class="flex-center flex-column">
-			<tr>
-				<th> <label for="username"><b>Username:</b></label> </th>
-				<th> <input type="text" placeholder="username" id="loginUsername" required> </th>
-			</tr>
-			<tr>
-				<th> <label for="password"><b>Password:</b></label> </th>
-				<th> <input type="password" placeholder="password" id="loginPassword" required> </th>
-			</tr>
-			<tr>
-				<th><button onclick="verifyInformation()">Login</button></th>
-			</tr>
-		</table>
-	</div>
-
-	<div id="aboutModal" class="modal">
-		<div class="modal-content">
-			<span class="close-btn">&times;</span>
-			<p>
-				This website was created by:<br />
-				Ron Zeidman and Yuval Khoramian <br />
-				We used jQuery Plugin when we checked if the input fields are correct in register and settings<br />
-				There were few difficulties in this project such as the understanding of the use of jQuery and the understanding of how to work with arrays in javascript.<br />
-				Moreoever doing this Modal window was pretty easy to make but to make it exit by pressing on the esc key was pretty hard to make.<br />
-				In addition, drawing the monsters/pacman/smiley/power up dot , was pretty hard although it was fun as well.<br />
-				In conclusion, we hope you enjoy in our website and will win the game with new highscore !
-			</p>
-		</div>
-	</div>
-
-	<div id="gamePage" style="text-align: center; align-content: center;" class="float-container; hidden ">
-		<div id="chooseSettings" style="text-align: center;" class="float-child">
-			<table>
+		<div id="login" class="hidden">
+			<table class="flex-center flex-column">
 				<tr>
-					<th><label for="RightMove">Move Right</label></th>
-					<th><input id="RightMove" type="text" value="ArrowRight" readonly /></th>
-					<th><button id="RightMoveButton" onclick="setMoveRight()">Change</button></th>
+					<th> <label for="username"><b>Username:</b></label> </th>
+					<th> <input type="text" placeholder="username" id="loginUsername" required> </th>
 				</tr>
 				<tr>
-					<th><label for="LeftMove">Move Left</label></th>
-					<th><input id="LeftMove" type="text" value="ArrowLeft" readonly /></th>
-					<th><button id="LeftMoveButton" onclick="setMoveLeft()">Change</button></th>
+					<th> <label for="password"><b>Password:</b></label> </th>
+					<th> <input type="password" placeholder="password" id="loginPassword" required> </th>
 				</tr>
 				<tr>
-					<th><label for="UpMove">Move Up</label></th>
-					<th><input id="UpMove" type="text" value="ArrowUp" readonly /></th>
-					<th><button id="UpMoveButton" onclick="setMoveUp()">Change</button></th>
-				</tr>
-				<tr>
-					<th><label for="DownMove">Move Down</label></th>
-					<th><input id="DownMove" type="text" value="ArrowDown" readonly /></th>
-					<th><button id="DownMoveButton" onclick="setMoveDown()">Change</button></th>
-				</tr>
-				<tr>
-					<th><label for="firstFoodColor">First food color: </label></th>
-					<th><input type="color" id="firstFoodColor" value="#FFFF00"></th>
-					<th><label for="firstFoodPoints">First food points: </label></th>
-					<th><input id="firstFoodPoints" type="text" value="5" /></th>
-				</tr>
-				<tr>
-					<th><label for="secondFoodColor">Second food color: </label></th>
-					<th><input type="color" id="secondFoodColor" value="#FF4500"></th>
-					<th><label for="secondFoodPoints">Second food points: </label></th>
-					<th><input id="secondFoodPoints" type="text" value="15" /></th>
-				</tr>
-				<tr>
-					<th><label for="thirdFoodColor">Third food color: </label></th>
-					<th><input type="color" id="thirdFoodColor" value="#00FF7F"></th>
-					<th><label for="thirdFoodPoints">Third food points: </label></th>
-					<th><input id="thirdFoodPoints" type="text" value="25" /></th>
-				</tr>
-				<tr>
-					<th><label for="amountOfFood">Amount of food: </label></th>
-					<th><input type="text" id="amountOfFood" value="50"></th>
-				</tr>
-				<tr>
-					<th><label for="amountOfTime">time for game: </label></th>
-					<th><input type="text" id="amountOfTime" value="60"> </th>
-				</tr>
-				<tr>
-					<th><label for="amountOfGhosts">Amount of ghosts: </label></th>
-					<th><input type="text" id="amountOfGhosts" value="4"></th>
-				</tr>
-				<tr>
-					<th><button id="randomSettingsButton" onclick="setSettingsRandom()">random values</button></th>
-				</tr>
-				<tr>
-					<th><button id="moveToGameButton" onclick="moveToGame()">start game</button></th>
+					<th><button onclick="verifyInformation()">Login</button></th>
 				</tr>
 			</table>
 		</div>
 
-		<div id="gameboard" class="float-child; hidden">
-			<div>
-				<label id="welcomeUser">Pacman Name: </label>
-			</div>
-			<div id="score">
-				<label for="lblScore">SCORE:</label>
-				<input id="lblScore" type="text" />
-			</div>
-			<div id="time">
-				<label for="lblTime">TIME:</label>
-				<input id="lblTime" type="text" />
-			</div>
-			<div id="lives">
-				<label for="lblTime">Lives:</label>
-				<input id="lblTime" type="text" />
-			</div>
-			<div id="game">
-				<canvas id="canvas" width="640" height="440"></canvas>
-			</div>
-			<div>
-				<button id="restartGameButton" onclick="restartGame()">Start New Game</button>
+		<div id="aboutModal" class="modal">
+			<div class="modal-content">
+				<span class="close-btn">&times;</span>
+				<p>
+					This website was created by:<br />
+					Ron Zeidman and Yuval Khoramian <br />
+					We used jQuery Plugin when we checked if the input fields are correct in register and settings<br />
+					There were few difficulties in this project such as the understanding of the use of jQuery and the
+					understanding of how to work with arrays in javascript.<br />
+					Moreoever doing this Modal window was pretty easy to make but to make it exit by pressing on the esc
+					key
+					was pretty hard to make.<br />
+					In addition, drawing the monsters/pacman/smiley/power up dot , was pretty hard although it was fun
+					as
+					well.<br />
+					In conclusion, we hope you enjoy in our website and will win the game with new highscore !
+				</p>
 			</div>
 		</div>
-	</div>
 
-	<script>//modal's script to open and close
-		let modalBtn = document.getElementById("showAboutButton")
-		let modal = document.querySelector(".modal")
-		let closeBtn = document.querySelector(".close-btn")
-		modalBtn.onclick = function () {
-			modal.style.display = "block"
-		}
-		closeBtn.onclick = function () {
-			modal.style.display = "none"
-		}
-		window.onclick = function (e) {
-			if (e.target == modal) {
+		<div id="gamePage" style="text-align: center; align-content: center;" class="float-container; hidden ">
+			<div id="chooseSettings" style="text-align: center;" class="float-child">
+				<table>
+					<tr>
+						<th><label for="RightMove">Move Right</label></th>
+						<th><input id="RightMove" type="text" value="ArrowRight" readonly /></th>
+						<th><button id="RightMoveButton" onclick="setMoveRight()">Change</button></th>
+					</tr>
+					<tr>
+						<th><label for="LeftMove">Move Left</label></th>
+						<th><input id="LeftMove" type="text" value="ArrowLeft" readonly /></th>
+						<th><button id="LeftMoveButton" onclick="setMoveLeft()">Change</button></th>
+					</tr>
+					<tr>
+						<th><label for="UpMove">Move Up</label></th>
+						<th><input id="UpMove" type="text" value="ArrowUp" readonly /></th>
+						<th><button id="UpMoveButton" onclick="setMoveUp()">Change</button></th>
+					</tr>
+					<tr>
+						<th><label for="DownMove">Move Down</label></th>
+						<th><input id="DownMove" type="text" value="ArrowDown" readonly /></th>
+						<th><button id="DownMoveButton" onclick="setMoveDown()">Change</button></th>
+					</tr>
+					<tr>
+						<th><label for="firstFoodColor">First food color: </label></th>
+						<th><input type="color" id="firstFoodColor" value="#FFFF00"></th>
+						<th><label for="firstFoodPoints">First food points: </label></th>
+						<th><input id="firstFoodPoints" type="text" value="5" /></th>
+					</tr>
+					<tr>
+						<th><label for="secondFoodColor">Second food color: </label></th>
+						<th><input type="color" id="secondFoodColor" value="#FF4500"></th>
+						<th><label for="secondFoodPoints">Second food points: </label></th>
+						<th><input id="secondFoodPoints" type="text" value="15" /></th>
+					</tr>
+					<tr>
+						<th><label for="thirdFoodColor">Third food color: </label></th>
+						<th><input type="color" id="thirdFoodColor" value="#00FF7F"></th>
+						<th><label for="thirdFoodPoints">Third food points: </label></th>
+						<th><input id="thirdFoodPoints" type="text" value="25" /></th>
+					</tr>
+					<tr>
+						<th><label for="amountOfFood">Amount of food: </label></th>
+						<th><input type="text" id="amountOfFood" value="50"></th>
+					</tr>
+					<tr>
+						<th><label for="amountOfTime">time for game: </label></th>
+						<th><input type="text" id="amountOfTime" value="60"> </th>
+					</tr>
+					<tr>
+						<th><label for="amountOfGhosts">Amount of ghosts: </label></th>
+						<th><input type="text" id="amountOfGhosts" value="4"></th>
+					</tr>
+					<tr>
+						<th><button id="randomSettingsButton" onclick="setSettingsRandom()">random values</button></th>
+					</tr>
+					<tr>
+						<th><button id="moveToGameButton" onclick="moveToGame()">start game</button></th>
+					</tr>
+				</table>
+			</div>
+
+			<div id="gameboard" class="float-child; hidden">
+				<audio id="gameSong" preload="auto" loop="true" volume="0.5" src="song.mp3"> </audio>
+				<div>
+					<label id="welcomeUser">Pacman Name: </label>
+				</div>
+				<div id="score">
+					<label for="lblScore">SCORE:</label>
+					<input id="lblScore" type="text" />
+				</div>
+				<div id="time">
+					<label for="lblTime">TIME:</label>
+					<input id="lblTime" type="text" />
+				</div>
+				<div id="lives">
+					<label for="lblTime">Lives:</label>
+					<input id="lblTime" type="text" />
+				</div>
+				<div id="game">
+					<canvas id="canvas" width="640" height="440"></canvas>
+				</div>
+				<div>
+					<button id="restartGameButton" onclick="restartGame()">Start New Game</button>
+				</div>
+			</div>
+		</div>
+
+		<script>//modal's script to open and close
+			let modalBtn = document.getElementById("showAboutButton")
+			let modal = document.querySelector(".modal")
+			let closeBtn = document.querySelector(".close-btn")
+			modalBtn.onclick = function () {
+				modal.style.display = "block"
+			}
+			closeBtn.onclick = function () {
 				modal.style.display = "none"
 			}
-		}
-		window.addEventListener('keydown', function (event) {
-			if (event.key === 'Escape') {
-				modal.style.display = 'none'
+			window.onclick = function (e) {
+				if (e.target == modal) {
+					modal.style.display = "none"
+				}
 			}
-		})
-	</script>
+			window.addEventListener('keydown', function (event) {
+				if (event.key === 'Escape') {
+					modal.style.display = 'none'
+				}
+			})
+		</script>
 
 
-	<script>//scripts to login/register and navigate
-		let loggedIn = false;
-		let currentUser = "Not Logged In";
-		const users = [];
-		let firstUser = {
-			username: "p",
-			password: "p",
-			name: "p p",
-			email: "p@p.p",
-			birthday: Date.now()
-		};
-		users.push(firstUser);
+		<script>//scripts to login/register and navigate
+			let loggedIn = false;
+			let currentUser = "Not Logged In";
+			const users = [];
+			let firstUser = {
+				username: "p",
+				password: "p",
+				name: "p p",
+				email: "p@p.p",
+				birthday: Date.now()
+			};
+			users.push(firstUser);
 
-		function verifyInformation() {//for login
-			givenUsername = document.getElementById("loginUsername").value;
-			givenPassword = document.getElementById("loginPassword").value;
-			let i;
-			for (i = 0; i < users.length; i++) {
-				if (users[i].username == givenUsername && users[i].password == givenPassword) {
-					window.alert("You have successfully log in to the website !");
-					loggedIn = true;
-					currentUser = users[i].name;
-					document.getElementById("showLogoutButton").style.display = "block";
-					document.getElementById("showLoginButton").style.display = "none";
-					document.getElementById("showRegisterButton").style.display = "none";
-					showGame();
+			function verifyInformation() {//for login
+				givenUsername = document.getElementById("loginUsername").value;
+				givenPassword = document.getElementById("loginPassword").value;
+				let i;
+				for (i = 0; i < users.length; i++) {
+					if (users[i].username == givenUsername && users[i].password == givenPassword) {
+						window.alert("You have successfully log in to the website !");
+						loggedIn = true;
+						currentUser = users[i].name;
+						document.getElementById("showLogoutButton").style.display = "block";
+						document.getElementById("showLoginButton").style.display = "none";
+						document.getElementById("showRegisterButton").style.display = "none";
+						showGame();
+						return;
+					}
+					if (i == users.length - 1) {//we arrived to the end
+						window.alert("There is a problem with the username or the password");
+					}
+				}
+			}
+
+			function registerUser() {//register user
+				//check that everything is ok:
+				if ($('#registerUsername').val().length == 0 || $('#registerPassword').val().length == 0 || $('#registerName').val().length == 0 || $('#registerEmail').val().length == 0 || $('#registerBirthday').val() == 0) {
+					window.alert("You need to fill all fields in order to continue");
 					return;
 				}
-				if (i == users.length - 1) {//we arrived to the end
-					window.alert("There is a problem with the username or the password");
+				if ($('#registerPassword').val().length < 6) {
+					window.alert("Password need to be at least 6 characters long")
+					return;
 				}
+				if (!containsLetterAndNumber($('#registerPassword').val())) {
+					window.alert("Password need to be alphanumeric and need to contains at least one letter and at least one number");
+					return;
+				}
+				if (doesContainsNumber($('#registerName').val())) {
+					window.alert("Name can't have numbers in it");
+					return;
+				}
+				if (!validateEmail($('#registerEmail').val())) {
+					window.alert("Email is not valid");
+					return;
+				}
+				let newUser = {
+					username: document.getElementById("registerUsername").value,
+					password: document.getElementById("registerPassword").value,
+					name: document.getElementById("registerName").value,
+					email: document.getElementById("registerEmail").value,
+					birthday: document.getElementById("registerBirthday").value
+				};
+				//add the user to the users array
+				users.push(newUser);
+				window.alert("You have successfully Register to the site with username: " + users[users.length - 1].username);
+				showLogin();
 			}
-		}
 
-		function registerUser() {//register user
-			//check that everything is ok:
-			if ($('#registerUsername').val().length == 0 || $('#registerPassword').val().length == 0 || $('#registerName').val().length == 0 || $('#registerEmail').val().length == 0 || $('#registerBirthday').val() == 0) {
-				window.alert("You need to fill all fields in order to continue");
-				return;
+			function validateEmail(email) {
+				var re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+				return re.test(email);
 			}
-			if ($('#registerPassword').val().length < 6) {
-				window.alert("Password need to be at least 6 characters long")
-				return;
-			}
-			if (!containsLetterAndNumber($('#registerPassword').val())) {
-				window.alert("Password need to be alphanumeric and need to contains at least one letter and at least one number");
-				return;
-			}
-			if (doesContainsNumber($('#registerName').val())) {
-				window.alert("Name can't have numbers in it");
-				return;
-			}
-			if (!validateEmail($('#registerEmail').val())) {
-				window.alert("Email is not valid");
-				return;
-			}
-			let newUser = {
-				username: document.getElementById("registerUsername").value,
-				password: document.getElementById("registerPassword").value,
-				name: document.getElementById("registerName").value,
-				email: document.getElementById("registerEmail").value,
-				birthday: document.getElementById("registerBirthday").value
+
+			function containsLetterAndNumber(str) {
+				let code, i, len;
+				let foundLetter = false;
+				let foundNumber = false;
+				let foundIllegalCharacter;
+				for (i = 0, len = str.length; i < len; i++) {
+					code = str.charCodeAt(i);
+					if (code > 47 && code < 58) { // numeric (0-9)
+						foundNumber = true;
+					}
+					else if (code > 64 && code < 91) {// upper alpha (A-Z)
+						foundLetter = true;
+					}
+					else if (code > 96 && code < 123) { // lower alpha (a-z)
+						foundLetter = true;
+					}
+					else {
+						foundIllegalCharacter = true
+					}
+				}
+				return foundNumber && foundLetter && !foundIllegalCharacter;
 			};
-			//add the user to the users array
-			users.push(newUser);
-			window.alert("You have successfully Register to the site with username: " + users[users.length - 1].username);
-			showLogin();
-		}
 
-		function validateEmail(email) {
-			var re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-			return re.test(email);
-		}
+			function doesContainsNumber(str) {
+				let code, i, len;
+				for (i = 0, len = str.length; i < len; i++) {
+					code = str.charCodeAt(i);
+					if (code > 47 && code < 58) { // numeric (0-9)
+						return true;
+					}
+				}
+				return false;
+			}
 
-		function containsLetterAndNumber(str) {
-			let code, i, len;
-			let foundLetter = false;
-			let foundNumber = false;
-			let foundIllegalCharacter;
-			for (i = 0, len = str.length; i < len; i++) {
-				code = str.charCodeAt(i);
-				if (code > 47 && code < 58) { // numeric (0-9)
-					foundNumber = true;
-				}
-				else if (code > 64 && code < 91) {// upper alpha (A-Z)
-					foundLetter = true;
-				}
-				else if (code > 96 && code < 123) { // lower alpha (a-z)
-					foundLetter = true;
+			function showRegister() {
+				document.getElementById("register").style.display = "block";
+				document.getElementById("login").style.display = "none";
+				document.getElementById("welcome").style.display = "none";
+				document.getElementById("gamePage").style.display = "none";
+				clearLoginInfo();
+				clearRegisterInfo();
+			}
+
+			function showLogin() {
+				document.getElementById("login").style.display = "block";
+				document.getElementById("register").style.display = "none";
+				document.getElementById("welcome").style.display = "none";
+				document.getElementById("gamePage").style.display = "none";
+				clearLoginInfo();
+				clearRegisterInfo();
+			}
+
+			function showGame() {
+				if (loggedIn) {
+					if (document.getElementById("gamePage").style.display != "block") {//we show the game only if the game is not already shown
+						document.getElementById("welcomeUser").innerHTML = "Pacman Name: " + currentUser;
+						document.getElementById("gamePage").style.display = "block";
+						document.getElementById("register").style.display = "none";
+						document.getElementById("login").style.display = "none";
+						document.getElementById("welcome").style.display = "none";
+					}
 				}
 				else {
-					foundIllegalCharacter = true
+					window.alert("You can't enter the game if you're not logged in");
 				}
 			}
-			return foundNumber && foundLetter && !foundIllegalCharacter;
-		};
 
-		function doesContainsNumber(str) {
-			let code, i, len;
-			for (i = 0, len = str.length; i < len; i++) {
-				code = str.charCodeAt(i);
-				if (code > 47 && code < 58) { // numeric (0-9)
-					return true;
-				}
+			function logOut() {
+				loggedIn = false;
+				restartGame();
+				document.getElementById("showLoginButton").style.display = "block";
+				document.getElementById("showRegisterButton").style.display = "block";
+				document.getElementById("showLogoutButton").style.display = "none";
+				document.getElementById("welcome").style.display = "block";
+				document.getElementById("gamePage").style.display = "none";
+				document.getElementById("register").style.display = "none";
+				document.getElementById("login").style.display = "none";
+				clearLoginInfo();
+				clearRegisterInfo();
 			}
-			return false;
-		}
 
-		function showRegister() {
-			document.getElementById("register").style.display = "block";
-			document.getElementById("login").style.display = "none";
-			document.getElementById("welcome").style.display = "none";
-			document.getElementById("gamePage").style.display = "none";
-		}
-
-		function showLogin() {
-			document.getElementById("login").style.display = "block";
-			document.getElementById("register").style.display = "none";
-			document.getElementById("welcome").style.display = "none";
-			document.getElementById("gamePage").style.display = "none";
-		}
-
-		function showGame() {
-			if (loggedIn) {
-				if (document.getElementById("gamePage").style.display != "block") {//we show the game only if the game is not already shown
-					document.getElementById("welcomeUser").innerHTML = "Pacman Name: " + currentUser;
-					document.getElementById("gamePage").style.display = "block";
-					document.getElementById("register").style.display = "none";
-					document.getElementById("login").style.display = "none";
-					document.getElementById("welcome").style.display = "none";
-				}
+			function clearRegisterInfo() {
+				document.getElementById("registerUsername").value = "";
+				document.getElementById("registerPassword").value = "";
+				document.getElementById("registerName").value = "";
+				document.getElementById("registerEmail").value = "";
+				document.getElementById("registerBirthday").value = "";
 			}
-			else {
-				window.alert("You can't enter the game if you're not logged in");
-			}
-		}
 
-		function logOut() {
-			loggedIn = false;
-			removeGameIntervals();
-			document.getElementById("showLoginButton").style.display = "block";
-			document.getElementById("showRegisterButton").style.display = "none";
-			document.getElementById("showLogoutButton").style.display = "none";
-			document.getElementById("welcome").style.display = "block";
-			document.getElementById("gamePage").style.display = "none";
-			document.getElementById("register").style.display = "none";
-			document.getElementById("login").style.display = "none";
-		}
-	</script>
+			function clearLoginInfo() {
+				document.getElementById("loginUsername").value = "";
+				document.getElementById("loginPassword").value = "";
+			}
+		</script>
+	<div class="footer">
+		<p>Contact information: <a href="mailto:yuvalkh@post.bgu.ac.il"> yuvalkh@post.bgu.ac.il</a>.</p>
+	</div>
 
 </body>
 
