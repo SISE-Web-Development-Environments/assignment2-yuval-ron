@@ -229,6 +229,8 @@ function removeGameIntervals() {
 	window.clearInterval(ghostsInterval);
 	window.clearInterval(timeInterval);
 	window.clearInterval(specialCharacterInterval);
+	strongMode = false;
+	strongTimer = 0;
 	document.getElementById('gameSong').pause();
 }
 
@@ -256,6 +258,8 @@ function restartGame() {
 function Start() {
 	ghostsInterval = setInterval(moveGhostSmartly, 700);
 	interval = setInterval(UpdatePosition, 100);
+	specialCharacter.x = 0;
+	specialCharacter.y = 0;
 	specialCharacterInterval = setInterval(moveSmileyRandomly, 700);
 	timeInterval = setInterval(countTimer, 100);
 	keysDown = [];
@@ -267,10 +271,9 @@ function Start() {
 	score = 0;
 	pac_color = "yellow";
 	var cnt = 176;
-	var firstFoodRemain = Math.ceil(0.6 * totalFoodRemain);
 	var secondFoodRemain = Math.floor(0.3 * totalFoodRemain);
 	var thirdFoodRemain = Math.floor(0.1 * totalFoodRemain);
-	var pacman_remain = 1;
+	var firstFoodRemain = totalFoodRemain - secondFoodRemain - thirdFoodRemain;
 	start_time = new Date();
 	for (let i = 0; i < 16; i++) {//every column
 		board[i] = new Array();
@@ -604,8 +607,10 @@ function Draw() {
 
 function moveSmileyRandomly() {
 	let randomNumber = Math.floor(Math.random() * 4) + 1;
-	moveSpecialCharacter(specialCharacter, randomNumber);
-	Draw();
+	if(specialCharacter.alive) {
+		moveSpecialCharacter(specialCharacter, randomNumber);
+		Draw();
+	}
 }
 
 
